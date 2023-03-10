@@ -48,9 +48,9 @@
 
           let marker;
           map.on("click", function (e) {
-            if (marker) {
-              map.removeLayer(marker);
-            }
+            // if (marker) {
+            //   map.removeLayer(marker);
+            // }
             marker = new L.Marker(e.latlng, { icon: pinIcon }).addTo(map);
             history(e.latlng);
           });
