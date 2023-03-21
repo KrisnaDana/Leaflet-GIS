@@ -1,0 +1,19 @@
+#viewButton {
+  position: absolute;
+  z-index: 400;
+  top: 80px;
+  left: 23px;
+  width: 32px;
+  height: 35px;
+  padding: 5px 0px 0px 2px;
+}
+
+#hotelButton {
+  position: absolute;
+  z-index: 400;
+  top: 121px;
+  left: 23px;
+  width: 32px;
+  height: 35px;
+  padding: 5px 0px 0px 2px;
+}

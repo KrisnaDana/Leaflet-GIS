@@ -1,0 +1,12 @@
+Tugas
+- Buatkan mode view peta sama tambah marker bangunan (seperti icon zoom in zoom out)
+- klik peta, muncul dialog box (di atas peta, jadi tidak bisa diklik petanya). Input bebas (rumah, rumah sakit, sekolah, toko, dll). Isi data seperti alamat, nama, telp dll. abistu simpan ke database. Tambahkan marker sesuai bangunan. selesai simpan juga nanti ngeclose dialog box
+- klik marker yg dibuat nanti muncul popup dengan data input. ada tombol input drag, sama edit data, delete.
+- bisa lebih dari satu bangunan marker
+- bisa pake bangunan hotel/penginapan
+- optional: bisa login/register/logout.
+- gass pake reactjs + expressjs
+- peta full map
+
+
+https://github.com/CliffCloud/Leaflet.EasyButton/blob/master/USAGE.md
