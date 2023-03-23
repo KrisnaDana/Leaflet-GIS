@@ -137,3 +137,27 @@ const updateModal = (index) => {
     document.getElementById("update_lat").value = hotels[index].lat;
     document.getElementById("update_lng").value = hotels[index].lng;
 };
+
+// document
+//     .getElementById("create-hotel-submit")
+//     .addEventListener("click", function () {
+//         fetch("http://localhost:8000/api/hotel", {
+//             headers: {
+//                 Accept: "application/json",
+//                 "Content-Type": "application/json",
+//             },
+//             method: "POST",
+//             body: JSON.stringify({
+//                 hotel_name: document.getElementById("create-hotel-name").value,
+//                 hotel_address: document.getElementById("create-hotel-address")
+//                     .value,
+//                 hotel_phone:
+//                     document.getElementById("create-hotel-phone").value,
+//                 hotel_lat: document.getElementById("create-hotel-lat").value,
+//                 hotel_lng: document.getElementById("create-hotel-lng").value,
+//             }),
+//         })
+//             .then((response) => response.json())
+//             .then(alert(response.message))
+//             .then(console.log("message"));
+//     });
