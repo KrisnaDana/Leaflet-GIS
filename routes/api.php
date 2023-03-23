@@ -20,6 +20,6 @@ use App\Http\Controllers\API\HotelController;
 // });
 
 Route::get('/hotels', [HotelController::class, 'index']);
-Route::post('/hotel', [HotelController::class, 'store']);
+Route::post('/hotel', [HotelController::class, 'store'])->name('api-create-hotel');
 Route::patch('/hotel/{id}', [HotelController::class, 'update']);
 Route::delete('/hotel/{id}', [HotelController::class, 'destroy']);

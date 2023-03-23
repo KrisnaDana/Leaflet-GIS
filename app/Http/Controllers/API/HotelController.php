@@ -30,6 +30,7 @@ class HotelController extends Controller
             'lng' => 'required',
         ]);
         DB::table('hotels')->insert($validated);
+        // return "Done";
         return response()->json(["message" => "Hotel created successfully.", 200]);
     }
 

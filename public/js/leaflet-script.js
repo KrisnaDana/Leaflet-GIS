@@ -58,7 +58,6 @@ map.on("click", function (e) {
         //
     } else if (mode === "view") {
         //
-    } else {
     }
 });
 
@@ -97,12 +96,8 @@ marker.forEach(function (m, index) {
                 Lng &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: ${hotels[index].lng}
                 </p>`,
             }).openOn(map);
-        } else {
         }
     });
-});
-
-marker.forEach(function (m, index) {
     m.on("drag", function (e) {
         if (mode === "hotel") {
             var popup = L.popup(e.latlng, {
@@ -120,29 +115,18 @@ marker.forEach(function (m, index) {
             }).openOn(map);
         }
     });
-});
-
-marker.forEach(function (m, index) {
     m.on("dragend", function (e) {
         if (mode === "hotel") {
-            // console.log(e.target.getLatLng());
-            // console.log(
-            //     `http://localhost:8000/edit/${hotels[index].id}/${
-            //         e.target.getLatLng().lat
-            //     }/${e.target.getLatLng().lng}`
-            // );
             fetch(
                 `http://localhost:8000/edit/${hotels[index].id}/${
                     e.target.getLatLng().lat
                 }/${e.target.getLatLng().lng}`
             );
-            setTimeout(function () {}, 1000);
         }
     });
 });
 
 const updateModal = (index) => {
-    console.log(index);
     document.getElementById("updateButtonModal").click();
     document.getElementById(
         "update_form"
