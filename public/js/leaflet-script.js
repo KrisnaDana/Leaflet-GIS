@@ -117,20 +117,35 @@ marker.forEach(function (m, index) {
     });
     m.on("dragend", function (e) {
         if (mode === "hotel") {
+            // fetch(
+            //     `http://localhost:8000/edit/${hotels[index].id}/${
+            //         e.target.getLatLng().lat
+            //     }/${e.target.getLatLng().lng}`
+            // );
             fetch(
-                `http://localhost:8000/edit/${hotels[index].id}/${
-                    e.target.getLatLng().lat
-                }/${e.target.getLatLng().lng}`
+                `https://app-7918b3db-26fc-4c5a-a8d0-e3fe05136df2.cleverapps.io/edit/${
+                    hotels[index].id
+                }/${e.target.getLatLng().lat}/${e.target.getLatLng().lng}`
             );
+            // fetch(
+            //     `<?php echo route('edit', ['id' => ${
+            //         hotels[index].id
+            //     }, 'lat' => ${e.target.getLatLng().lat}, 'lng' => ${
+            //         e.target.getLatLng().lng
+            //     }]) ?>;`
+            // );
         }
     });
 });
 
 const updateModal = (index) => {
     document.getElementById("updateButtonModal").click();
+    // document.getElementById(
+    //     "update_form"
+    // ).action = `http://localhost:8000/edit/${hotels[index].id}`;
     document.getElementById(
         "update_form"
-    ).action = `http://localhost:8000/edit/${hotels[index].id}`;
+    ).action = `https://app-7918b3db-26fc-4c5a-a8d0-e3fe05136df2.cleverapps.io/edit/${hotels[index].id}`;
     document.getElementById("update_name").value = hotels[index].name;
     document.getElementById("update_address").value = hotels[index].address;
     document.getElementById("update_phone").value = hotels[index].phone;
