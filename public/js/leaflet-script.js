@@ -78,7 +78,7 @@ marker.forEach(function (m, index) {
                 <br />
                 <div class="d-flex flex-row-reverse">
                 <button class="btn btn-success btn-sm" onclick="updateModal(${index})">Edit</button>
-                <a type="button" class="btn btn-danger btn-sm me-2 text-white" href="https://app-7918b3db-26fc-4c5a-a8d0-e3fe05136df2.cleverapps.io/delete/${hotels[index].id}">Delete</a>
+                <a type="button" class="btn btn-danger btn-sm me-2 text-white" href="https://krisnadana-gis2.cleverapps.io/delete/${hotels[index].id}">Delete</a>
                 </div>
                 </p>`,
             }).openOn(map);
@@ -123,7 +123,7 @@ marker.forEach(function (m, index) {
             //     }/${e.target.getLatLng().lng}`
             // );
             fetch(
-                `https://app-7918b3db-26fc-4c5a-a8d0-e3fe05136df2.cleverapps.io/edit/${
+                `https://krisnadana-gis2.cleverapps.io/edit/${
                     hotels[index].id
                 }/${e.target.getLatLng().lat}/${e.target.getLatLng().lng}`
             );
@@ -145,7 +145,7 @@ const updateModal = (index) => {
     // ).action = `http://localhost:8000/edit/${hotels[index].id}`;
     document.getElementById(
         "update_form"
-    ).action = `https://app-7918b3db-26fc-4c5a-a8d0-e3fe05136df2.cleverapps.io/edit/${hotels[index].id}`;
+    ).action = `https://krisnadana-gis2.cleverapps.io/edit/${hotels[index].id}`;
     document.getElementById("update_name").value = hotels[index].name;
     document.getElementById("update_address").value = hotels[index].address;
     document.getElementById("update_phone").value = hotels[index].phone;
