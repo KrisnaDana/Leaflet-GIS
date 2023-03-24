@@ -78,7 +78,7 @@ marker.forEach(function (m, index) {
                 <br />
                 <div class="d-flex flex-row-reverse">
                 <button class="btn btn-success btn-sm" onclick="updateModal(${index})">Edit</button>
-                <a type="button" class="btn btn-danger btn-sm me-2 text-white" href="http://localhost:8000/delete/${hotels[index].id}">Delete</a>
+                <a type="button" class="btn btn-danger btn-sm me-2 text-white" href="https://app-7918b3db-26fc-4c5a-a8d0-e3fe05136df2.cleverapps.io/delete/${hotels[index].id}">Delete</a>
                 </div>
                 </p>`,
             }).openOn(map);
