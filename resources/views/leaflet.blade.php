@@ -11,18 +11,22 @@
         <link rel="stylesheet" href="{{url('/css/leaflet.css')}}" />
         <link rel="stylesheet" href="{{url('/css/style.css')}}" />
         <script src="{{url('/js/leaflet.js')}}"></script>
+
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css" />
         <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.Default.css" /> 
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/leaflet.markercluster.js"></script>
         <title>Leaflet Map</title>
     </head>
     <body>
         <div class="container-fluid">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createHotelModel" id="buttonModal" hidden></button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createHotelModel" id="create_hotel_modal" hidden></button>
             <div class="modal fade" id="createHotelModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
-                        <form method="post" action="{{route('create')}}">
-                            @csrf
+                        <form>
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">Create Hotel</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -30,31 +34,41 @@
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label class="form-label">Name</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" />
-                                    @error('name')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    <input type="text" class="form-control" id="create_hotel_name"/>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Address</label>
-                                    <input type="text" class="form-control @error('address') is-invalid @enderror" name="address" />
-                                    @error('address')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    <input type="text" class="form-control" id="create_hotel_address"/>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Phone</label>
-                                    <input type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" />
-                                    @error('phone')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    <input type="text" class="form-control" id="create_hotel_phone"/>
                                 </div>
-                                <input type="text" class="form-control" id="lat" name="lat" value="" hidden/>
-                                <input type="text" class="form-control" id="lng" name="lng" value="" hidden/>
+                                <div class="mb-3">
+                                    <label class="form-label">Number of Rooms</label>
+                                    <input type="text" class="form-control" id="create_hotel_room"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Hotel Star</label>
+                                    <select class="form-select" id="create_hotel_star">
+                                        <option selected>Open this select menu</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" id="create_hotel_description" rows="5"></textarea>
+                                </div>
+                                <input type="text" class="form-control" id="create_hotel_lat" hidden/>
+                                <input type="text" class="form-control" id="create_hotel_lng" hidden/>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" class="btn btn-primary" id="create_hotel_submit">Submit</button>
                             </div>
                         </form>
                     </div>
@@ -64,8 +78,7 @@
             <div class="modal fade" id="editHotelModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
-                        <form method="post" action="" id="update_form">
-                            @csrf
+                        <form>
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Hotel</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -73,31 +86,40 @@
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label class="form-label">Name</label>
-                                    <input type="text" class="form-control @error('update_name') is-invalid @enderror" id="update_name" name="update_name" value=""/>
-                                    @error('update_name')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    <input type="text" class="form-control" id="update_hotel_name"/>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Address</label>
-                                    <input type="text" class="form-control @error('update_address') is-invalid @enderror" id="update_address" name="update_address" value=""/>
-                                    @error('update_address')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    <input type="text" class="form-control" id="update_hotel_address"/>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Phone</label>
-                                    <input type="text" class="form-control @error('update_phone') is-invalid @enderror" id="update_phone" name="update_phone" value=""/>
-                                    @error('update_phone')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    <input type="text" class="form-control" id="update_hotel_phone"/>
                                 </div>
-                                <input type="text" class="form-control" id="update_lat" name="update_lat" value="" hidden/>
-                                <input type="text" class="form-control" id="update_lng" name="update_lng" value="" hidden/>
+                                <div class="mb-3">
+                                    <label class="form-label">Number of Rooms</label>
+                                    <input type="text" class="form-control" id="update_hotel_room"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Hotel Star</label>
+                                    <select class="form-select" id="update_hotel_star">
+                                        <option selected>Open this select menu</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" id="update_hotel_description" rows="5"></textarea>
+                                </div>
+                                <input type="text" class="form-control" id="update_hotel_id" hidden/>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
+                                <button type="button" class="btn btn-primary" id="update_hotel_submit">Submit</button>
                             </div>
                         </form>
                     </div>
@@ -106,6 +128,7 @@
             <div id="map" style="height: 930px">
                 <script type="text/javascript">
                     let hotels = <?php echo json_encode($hotels); ?>;
+                    let api_url = <?php echo json_encode(route('api_url')); ?>;
                     </script>
                 <script type="text/javascript" src="{{url('/js/leaflet-script.js')}}"></script>
             </div>

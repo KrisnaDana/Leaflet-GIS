@@ -19,7 +19,8 @@ use App\Http\Controllers\API\HotelController;
 //     return $request->user();
 // });
 
+Route::get('/', [HotelController::class, 'api_url'])->name('api_url');
 Route::get('/hotels', [HotelController::class, 'index']);
-Route::post('/hotel', [HotelController::class, 'store'])->name('api-create-hotel');
+Route::post('/hotel', [HotelController::class, 'store']);
 Route::patch('/hotel/{id}', [HotelController::class, 'update']);
 Route::delete('/hotel/{id}', [HotelController::class, 'destroy']);
