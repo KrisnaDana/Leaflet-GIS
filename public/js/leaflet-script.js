@@ -4,7 +4,7 @@ let marker = [];
 // Initialize Map
 const map = L.map("map").setView([-8.7945, 115.1769], 16); // [y, x], z)
 const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
+    maxZoom: 16,
     attribution:
         '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 }).addTo(map);
