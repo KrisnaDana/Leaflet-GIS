@@ -4,7 +4,7 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <!-- <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" /> -->
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
         <script src="https://kit.fontawesome.com/a94f3fd771.js" crossorigin="anonymous"></script>
         <link rel="icon" href="{{url('/images/hotel.png')}}" type="image/png" />
         <link rel="stylesheet" href="{{url('/css/bootstrap.min.css')}}" />
@@ -14,7 +14,7 @@
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css" />
         <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
-        
+
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.Default.css" /> 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/leaflet.markercluster.js"></script>
