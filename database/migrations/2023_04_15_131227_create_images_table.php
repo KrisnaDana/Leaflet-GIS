@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("hotel_id")->constrained("hotels");
-            $table->string("path");
+            $table->unsignedBigInteger('hotel_id')->default(0);
+            $table->unsignedBigInteger('room_id')->default(0);
+            $table->enum('type', ['Hotel', 'Room']);
             $table->boolean("is_thumbnail")->default(0);
+            $table->string("path");
             $table->timestamps();
         });
     }

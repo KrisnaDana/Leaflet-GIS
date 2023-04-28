@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->string("address");
-            $table->string("star");
+            $table->enum("star", ["1","2","3","4","5"]);
             $table->string("phone");
             $table->string("email");
             $table->text("description")->nullable();
