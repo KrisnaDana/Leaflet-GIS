@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\leafletController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HotelController;
+use App\Http\Controllers\RoomController;
+use App\Http\Controllers\FacilityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,3 +23,30 @@ Route::post('/', [leafletController::class, 'create'])->name('create');
 Route::post('/edit/{id}', [leafletController::class, 'edit'])->name('edit');
 Route::get('/edit/{id}/{lat}/{lng}', [leafletController::class, 'edit_location'])->name('edit-location');
 Route::get('/delete/{id}', [leafletController::class, 'delete'])->name('delete');
+
+// Route::middleware(['throttle:60,1'])->group(function() {
+//     Route::get('/', [HotelController::class, 'index'])->name('index');
+    
+//     Route::middleware([Guest::class])->group(function () {
+//         Route::post('/login', [AuthController::class, 'login'])->name('login');
+//         Route::post('/register', [AuthController::class, 'register'])->name('register');
+//     });
+    
+//     Route::middleware([User::class])->group(function () {
+//         Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+        
+//         Route::post('/hotel', [HotelController::class, 'create'])->name('create-hotel');
+//         Route::put('/hotel/{id}', [HotelController::class, 'edit'])->name('edit-hotel');
+//         Route::patch('/hotel/{id}', [HotelController::class, 'edit_location'])->name('edit-hotel-location');
+//         Route::delete('/hotel/{id}', [HotelController::class, 'delete'])->name('delete-hotel');
+        
+//         Route::post('/room', [RoomController::class, 'create'])->name('create-room');
+//         Route::put('/room/{id}', [RoomController::class, 'edit'])->name('edit-room');
+//         Route::delete('/room/{id}', [RoomController::class, 'delete'])->name('delete-room');
+        
+//         Route::post('/facility', [FacilityController::class, 'create'])->name('create-facility');
+//         Route::put('/facility/{id}', [FacilityController::class, 'edit'])->name('edit-facility');
+//         Route::delete('/facility/{id}', [FacilityController::class, 'delete'])->name('delete-facility');
+//     });
+// });
+

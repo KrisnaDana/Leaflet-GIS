@@ -18,18 +18,61 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.Default.css" /> 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/leaflet.markercluster.js"></script>
+
+        @livewireStyles
         <title>Leaflet Map</title>
     </head>
     <body>
-        <div class="container-fluid">
+        <div>
+            <nav class="navbar bg-success">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{{route('index')}}">
+                        <img src="{{url('images/hotel.png')}}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                        <span class="text-white">Hotel</span>
+                    </a>
+                    @if(!empty($user))
+                    <li class="d-flex nav-item dropdown text-white me-5">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Hezts
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Logout</a></li>
+                        </ul>
+                    </li>
+                    @else
+                    <div class="d-flex">
+                        <a class="me-3" href="{{route('index')}}" style="text-decoration:none">
+                            <h6 class="text-white">Login</h6>
+                        </a>
+                        <a class="me-3" href="{{route('index')}}" style="text-decoration:none">
+                            <h6 class="text-white">Register</h6>
+                        </a>
+                    </div>
+                    @endif
+                </div>
+            </nav>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createHotelModel" id="create_hotel_modal" hidden></button>
             <div class="modal fade" id="createHotelModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
                         <form>
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Create Hotel</h1>
+                                <h1 class="modal-title fs-3" id="exampleModalLabel">Create Hotel</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-header">
+                                <div class="row">
+                                    <div class="col-4">
+                                        <button type="button" class="btn btn-outline-danger btn-sm">Hotel</button>
+                                    </div>
+                                    <div class="col-4">
+                                        <button type="button" class="btn btn-outline-warning btn-sm">Room</button>
+                                    </div>
+                                    <div class="col-4">
+                                        <button type="button" class="btn btn-outline-success btn-sm">Facility</button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-body">
                                 <div class="mb-3">
@@ -125,7 +168,7 @@
                     </div>
                 </div>
             </div>
-            <div id="map" style="height: 930px">
+            <div id="map" style="height: 892px">
                 <script type="text/javascript">
                     let hotels = <?php echo json_encode($hotels); ?>;
                     let api_url = <?php echo json_encode(route('api_url')); ?>;
@@ -135,5 +178,6 @@
         </div>
         <script src="{{url('/js/bootstrap.bundle.min.js')}}"></script>
         <script src="{{url('/js/script.js')}}"></script>
+        @livewireScripts
     </body>
 </html>
