@@ -7,12 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Auth;
 
 class leafletController extends Controller
 {
     public function index(): View {
-        $hotels = DB::table('hotels')->get();
-        return view('leaflet', compact('hotels'));
+        $hotels = DB::table('hotel_temp')->get();
+        if(Auth::guard('user')->check()){
+            $user = Auth::guard('user')->user();
+        }else{
+            $user = null;
+        }
+        return view('leaflet', compact('hotels', 'user'));
     }
 
     public function create(Request $request): RedirectResponse {

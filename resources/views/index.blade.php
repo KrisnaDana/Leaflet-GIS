@@ -7,8 +7,7 @@
         <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
         <script src="https://kit.fontawesome.com/a94f3fd771.js" crossorigin="anonymous"></script>
         <link rel="icon" href="{{url('/images/hotel.png')}}" type="image/png" />
-        <!-- <link rel="stylesheet" href="{{url('/css/bootstrap.min.css')}}" /> -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{url('/css/bootstrap.min.css')}}" />
         <link rel="stylesheet" href="{{url('/css/leaflet.css')}}" />
         <link rel="stylesheet" href="{{url('/css/style.css')}}" />
         <script src="{{url('/js/leaflet.js')}}"></script>
@@ -24,6 +23,14 @@
         <title>Leaflet Map</title>
     </head>
     <body>
+        <div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                    Hello, world! This is a toast message.
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
         <div>
             <nav class="navbar bg-success">
                 <div class="container-fluid">
@@ -34,31 +41,39 @@
                     @if(!empty($user))
                     <li class="d-flex nav-item dropdown text-white me-5">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{$user->name}}
+                            Hezts
                         </a>
                         <ul class="dropdown-menu">
-                            <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
-                            <li><a class="dropdown-item" href="{{route('logout')}}">Logout</a></li>
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Logout</a></li>
                         </ul>
                     </li>
                     @else
                     <div class="d-flex">
-                        <a type="button" class="me-3" href="{{route('index')}}" style="text-decoration:none" data-bs-toggle="modal" data-bs-target="#login_modal" id="login_button">
+                        <a class="me-3" href="{{route('index')}}" style="text-decoration:none" data-bs-toggle="modal" data-bs-target="#login">
                             <h6 class="text-white">Login</h6>
                         </a>
-                        <a type="button" class="me-3" href="{{route('index')}}" style="text-decoration:none" data-bs-toggle="modal" data-bs-target="#register_modal" id="register_button">
+                        <a class="me-3" href="{{route('index')}}" style="text-decoration:none" data-bs-toggle="modal" data-bs-target="#register">
                             <h6 class="text-white">Register</h6>
                         </a>
                     </div>
                     @endif
                 </div>
             </nav>
-            @if(old('toast_validation'))
-                <div class="position-fixed top-0 end-0 p-3" style="z-index: 20000; width:300px" id="toast">
-                    <div class="align-items-center text-white bg-danger border-0 p-2" role="alert" aria-live="assertive" aria-atomic="true">
+            @if($toast = Session::get('toast'))
+                <div class="position-fixed top-0 end-0 p-3" style="z-index: 11; width:300px" id="toast">
+                    @if($toast["type"] == "success")
+                    <div class="align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    @elseif($toast["type"] == "warning")
+                    <div class="align-items-center text-white bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    @elseif($toast["type"] == "danger")
+                    <div class="align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    @else
+                    <div class="align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    @endif
                         <div class="d-flex">
                             <div class="toast-body">
-                            {{old('toast_validation')}}
+                            {{$toast["message"]}}
                             </div>
                             <button type="button" class="btn-close btn-close-white me-3 m-auto" aria-label="Close" id="closeToast"></button>
                         </div>
@@ -71,43 +86,15 @@
                     setTimeout(function(){document.getElementById("toast").hidden = true;}, 10000);
                 </script>
             @endif
-            @if($toast_danger = Session::get('toast_danger'))
-                <div class="position-fixed top-0 end-0 p-3" style="z-index: 20000; width:300px" id="toast">
-                    <div class="align-items-center text-white bg-danger border-0 p-2" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="d-flex">
-                            <div class="toast-body">
-                            {{$toast_danger}}
-                            </div>
-                            <button type="button" class="btn-close btn-close-white me-3 m-auto" aria-label="Close" id="closeToast"></button>
-                        </div>
+            <div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                    Hello, world! This is a toast message.
                     </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
-                <script>
-                    document.getElementById("closeToast").addEventListener("click", () => {
-                        document.getElementById("toast").hidden = true;
-                    });
-                    setTimeout(function(){document.getElementById("toast").hidden = true;}, 10000);
-                </script>
-            @endif
-            @if($toast_primary = Session::get('toast_primary'))
-                <div class="position-fixed top-0 end-0 p-3" style="z-index: 20000; width:300px" id="toast">
-                    <div class="align-items-center text-white bg-primary border-0 p-2" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="d-flex">
-                            <div class="toast-body">
-                            {{$toast_primary}}
-                            </div>
-                            <button type="button" class="btn-close btn-close-white me-3 m-auto" aria-label="Close" id="closeToast"></button>
-                        </div>
-                    </div>
-                </div>
-                <script>
-                    document.getElementById("closeToast").addEventListener("click", () => {
-                        document.getElementById("toast").hidden = true;
-                    });
-                    setTimeout(function(){document.getElementById("toast").hidden = true;}, 10000);
-                </script>
-            @endif
-            <div class="modal fade" id="login_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            </div>
+            <div class="modal fade" id="login" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <form method="post" action="{{url('login')}}">
@@ -118,23 +105,21 @@
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label class="form-label">Email</label>
-                                    <input type="text" class="form-control" name="email" value="{{old('email')}}" required>
+                                    <input type="text" class="form-control" name="email">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Password</label>
-                                    <input type="password" class="form-control" name="password" required/>
+                                    <input type="password" class="form-control" name="password"/>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <input type="hidden" class="form-control" name="toast_validation" value="Gagal melakukan login."/>
-                                <input type="hidden" class="form-control" name="login" value="login"/>
                                 <button class="btn btn-primary" style="width:100%;" type="submit">Submit</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="register_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div class="modal fade" id="register" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <form method="post" action="{{url('register')}}">
@@ -145,36 +130,18 @@
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label class="form-label">Name</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}">
-                                    @error('name')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    <input type="text" class="form-control" name="name">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Email</label>
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{old('email')}}">
-                                    @error('email')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    <input type="text" class="form-control" name="email">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Password</label>
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password"/>
-                                    @error('password')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Password Confirmation</label>
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password_confirmation"/>
-                                    @error('password_confirmation')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    <input type="password" class="form-control" name="password"/>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <input type="hidden" class="form-control" name="toast_validation" value="Gagal melakukan register."/>
-                                <input type="hidden" class="form-control" name="register" value="register"/>
                                 <button class="btn btn-primary" style="width:100%;" type="submit">Submit</button>
                             </div>
                         </form>
@@ -301,28 +268,12 @@
                 <script type="text/javascript">
                     let hotels = <?php echo json_encode($hotels); ?>;
                     let api_url = <?php echo json_encode(route('api_url')); ?>;
-                    let user = <?php echo (!empty($user->name)) ? json_encode($user->name) : 0;  ?>;
                     </script>
                 <script type="text/javascript" src="{{url('/js/leaflet-script.js')}}"></script>
             </div>
         </div>
-        <!-- <script src="{{url('/js/bootstrap.bundle.min.js')}}"></script> -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+        <script src="{{url('/js/bootstrap.bundle.min.js')}}"></script>
         <script src="{{url('/js/script.js')}}"></script>
-        @if(!empty(old('login')))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById("login_button").click();
-            });
-        </script>
-        @endif
-        @if(!empty(old('register')))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById("register_button").click();
-            });
-        </script>
-        @endif
         @livewireScripts
     </body>
 </html>

@@ -28,35 +28,37 @@ hotels.forEach(function (hotel, index) {
     markerClusters.addLayer(L.layerGroup(marker));
 });
 
-// Initialize view mode
-const viewButton = L.easyButton({
-    states: [
-        {
-            onClick: function (map) {
-                mode = "view";
-                marker.forEach(function (m, index) {
-                    m.dragging.disable();
-                });
+if (user) {
+    // Initialize view mode
+    const viewButton = L.easyButton({
+        states: [
+            {
+                onClick: function (map) {
+                    mode = "view";
+                    marker.forEach(function (m, index) {
+                        m.dragging.disable();
+                    });
+                },
+                icon: "fa-solid fa-eye fa-lg",
             },
-            icon: "fa-solid fa-eye fa-lg",
-        },
-    ],
-}).addTo(map);
+        ],
+    }).addTo(map);
 
-// Initialize hotel mode
-const hotelButton = L.easyButton({
-    states: [
-        {
-            onClick: function (map) {
-                mode = "hotel";
-                marker.forEach(function (m, index) {
-                    m.dragging.enable();
-                });
+    // Initialize hotel mode
+    const hotelButton = L.easyButton({
+        states: [
+            {
+                onClick: function (map) {
+                    mode = "hotel";
+                    marker.forEach(function (m, index) {
+                        m.dragging.enable();
+                    });
+                },
+                icon: "fa-solid fa-building fa-lg",
             },
-            icon: "fa-solid fa-building fa-lg",
-        },
-    ],
-}).addTo(map);
+        ],
+    }).addTo(map);
+}
 
 // Listener for Map when Clicked
 map.on("click", function (e) {

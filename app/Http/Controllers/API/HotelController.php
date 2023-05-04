@@ -18,7 +18,7 @@ class HotelController extends Controller
 
     public function index()
     {
-        $hotels = DB::table('hotels')->get();
+        $hotels = DB::table('hotel_temp')->get();
         return $hotels;
     }
 
@@ -37,7 +37,7 @@ class HotelController extends Controller
             'create_hotel_lat' => 'required',
             'create_hotel_lng' => 'required',
         ]);
-        DB::table('hotels')->insert([
+        DB::table('hotel_temp')->insert([
             'name' => $validated['create_hotel_name'],
             'address' => $validated['create_hotel_address'],
             'phone' => $validated['create_hotel_phone'],
@@ -74,12 +74,12 @@ class HotelController extends Controller
             'update_hotel_lng' => 'required_with:update_hotel_lat|numeric'
         ]);
         if(!empty($request->update_hotel_lat) && !empty($request->update_hotel_lng)){
-            DB::table('hotels')->where('id', $id)->update([
+            DB::table('hotel_temp')->where('id', $id)->update([
                 'lat' => $request->update_hotel_lat,
                 'lng' => $request->update_hotel_lng,
             ]);
         }else{
-            DB::table('hotels')->where('id', $id)->update([
+            DB::table('hotel_temp')->where('id', $id)->update([
                 'name' => $validated['update_hotel_name'],
                 'address' => $validated['update_hotel_address'],
                 'phone' => $validated['update_hotel_phone'],
@@ -96,7 +96,7 @@ class HotelController extends Controller
      */
     public function destroy(string $id)
     {
-        DB::table('hotels')->where('id', $id)->delete();
+        DB::table('hotel_temp')->where('id', $id)->delete();
         return response()->json(["message" => "Hotel deleted successfully.", 200]);
     }
 }
