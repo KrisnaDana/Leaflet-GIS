@@ -126,7 +126,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <input type="hidden" class="form-control" name="toast_validation" value="Gagal melakukan login."/>
+                                <input type="hidden" class="form-control" name="toast_validation" value="Login failed."/>
                                 <input type="hidden" class="form-control" name="login" value="login"/>
                                 <button class="btn btn-primary" style="width:100%;" type="submit">Submit</button>
                             </div>
@@ -173,7 +173,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <input type="hidden" class="form-control" name="toast_validation" value="Gagal melakukan register."/>
+                                <input type="hidden" class="form-control" name="toast_validation" value="Register failed."/>
                                 <input type="hidden" class="form-control" name="register" value="register"/>
                                 <button class="btn btn-primary" style="width:100%;" type="submit">Submit</button>
                             </div>
@@ -309,7 +309,7 @@
         <!-- <script src="{{url('/js/bootstrap.bundle.min.js')}}"></script> -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
         <script src="{{url('/js/script.js')}}"></script>
-        @if(!empty(old('login')))
+        @if(!empty(old('login')) || Session::get('show_login'))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById("login_button").click();

@@ -19,7 +19,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             return redirect()->intended(route('index'))->with(['toast_primary' => 'Login succesfully.']);
         }else{
-            return redirect()->back()->with(['toast_danger' => 'The provided credentials do not match our records.']);
+            return redirect()->back()->with(['toast_danger' => 'The provided credentials do not match our records.', 'show_login' => 'show_login']);
         }
     }
 
@@ -36,7 +36,7 @@ class AuthController extends Controller
             'password' => Hash::make($validated['password'])
         );
         User::create($user);
-        return redirect()->back()->with(['toast_primary' => 'Register successfully.']);
+        return redirect()->back()->with(['toast_primary' => 'Register successfully.', 'show_login' => 'show_login']);
     }
     
     public function logout(Request $request){
