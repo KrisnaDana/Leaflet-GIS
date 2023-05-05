@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
             $table->foreignId("hotel_id")->constrained("hotels");
-            $table->string("category");
-            $table->bigInteger("price_per_night")->unsigned();
+            $table->string("name");
+            $table->bigInteger("price")->unsigned();
             $table->integer("count")->unsigned();
             $table->text("description")->nullable();
             $table->timestamps();

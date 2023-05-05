@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId("hotel_id")->constrained("hotels");
             $table->string("name");
-            $table->integer("count_per_room")->unsigned()->nullable();
-            $table->integer("count_per_hotel")->unsigned()->nullable();
+            $table->enum('type', ['Hotel', 'Room']);
+            $table->integer("count")->unsigned();
             $table->text("description")->nullable();
             $table->timestamps();
         });
