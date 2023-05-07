@@ -63,9 +63,9 @@ if (user) {
 // Listener for Map when Clicked
 map.on("click", function (e) {
     if (mode === "hotel") {
-        document.getElementById("create_hotel_modal").click();
-        document.getElementById("create_hotel_lat").value = e.latlng.lat;
-        document.getElementById("create_hotel_lng").value = e.latlng.lng;
+        document.getElementById("create_hotel_button").click();
+        document.getElementById("lat").value = e.latlng.lat;
+        document.getElementById("lng").value = e.latlng.lng;
         //
     } else if (mode === "view") {
         //
@@ -101,25 +101,26 @@ marker.forEach(function (m, index) {
                 </p>`,
             }).openOn(map);
         } else if (mode === "view") {
-            var popup = L.popup(e.latlng, {
-                content: `
-                <p>Hotel: ${hotels[index].name}
-                <br />
-                Address: ${hotels[index].address}
-                <br />
-                Phone: ${hotels[index].phone}
-                <br />
-                Number of rooms: ${hotels[index].room}
-                <br />
-                Star: ${hotels[index].star}
-                <br />
-                Lat: ${hotels[index].lat}
-                <br />
-                Lng: ${hotels[index].lng}
-                <br />
-                Description: ${hotels[index].description}
-                </p>`,
-            }).openOn(map);
+            document.getElementById(`hotel_button_${hotels[index].id}`).click();
+            // var popup = L.popup(e.latlng, {
+            //     content: `
+            //     <p>Hotel: ${hotels[index].name}
+            //     <br />
+            //     Address: ${hotels[index].address}
+            //     <br />
+            //     Phone: ${hotels[index].phone}
+            //     <br />
+            //     Number of rooms: ${hotels[index].room}
+            //     <br />
+            //     Star: ${hotels[index].star}
+            //     <br />
+            //     Lat: ${hotels[index].lat}
+            //     <br />
+            //     Lng: ${hotels[index].lng}
+            //     <br />
+            //     Description: ${hotels[index].description}
+            //     </p>`,
+            // }).openOn(map);
         }
     });
     m.on("drag", function (e) {

@@ -20,14 +20,14 @@ use App\Http\Controllers\FacilityController;
 |
 */
 
-Route::get('/', [leafletController::class, 'index'])->name('index');
-Route::post('/', [leafletController::class, 'create'])->name('create');
-Route::post('/edit/{id}', [leafletController::class, 'edit'])->name('edit');
-Route::get('/edit/{id}/{lat}/{lng}', [leafletController::class, 'edit_location'])->name('edit-location');
-Route::get('/delete/{id}', [leafletController::class, 'delete'])->name('delete');
+// Route::get('/', [leafletController::class, 'index'])->name('index');
+// Route::post('/', [leafletController::class, 'create'])->name('create');
+// Route::post('/edit/{id}', [leafletController::class, 'edit'])->name('edit');
+// Route::get('/edit/{id}/{lat}/{lng}', [leafletController::class, 'edit_location'])->name('edit-location');
+// Route::get('/delete/{id}', [leafletController::class, 'delete'])->name('delete');
 
 Route::middleware(['throttle:60,1'])->group(function() {
-    //Route::get('/', [HotelController::class, 'index'])->name('index');
+    Route::get('/', [HotelController::class, 'index'])->name('index');
     
     Route::middleware([Guest::class])->group(function () {
         Route::post('/login', [AuthController::class, 'login'])->name('login');

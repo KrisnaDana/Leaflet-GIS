@@ -20,6 +20,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/MarkerCluster.Default.css" /> 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/leaflet.markercluster.js"></script>
 
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,600,0,0" />
         @livewireStyles
         <title>Leaflet Map</title>
     </head>
@@ -53,6 +54,9 @@
                     @endif
                 </div>
             </nav>
+
+
+
             @if(old('toast_validation'))
                 <div class="position-fixed top-0 end-0 p-3" style="z-index: 20000; width:300px" id="toast">
                     <div class="align-items-center text-white bg-danger border-0 p-2" role="alert" aria-live="assertive" aria-atomic="true">
@@ -107,6 +111,9 @@
                     setTimeout(function(){document.getElementById("toast").hidden = true;}, 10000);
                 </script>
             @endif
+
+
+
             <div class="modal fade" id="login_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -134,6 +141,9 @@
                     </div>
                 </div>
             </div>
+
+
+
             <div class="modal fade" id="register_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -171,59 +181,60 @@
                                     <div class="invalid-feedback">{{$message}}</div>
                                     @enderror
                                 </div>
-                            </div>
-                            <div class="modal-footer">
                                 <input type="hidden" class="form-control" name="toast_validation" value="Register failed."/>
                                 <input type="hidden" class="form-control" name="register" value="register"/>
+                            </div>
+                            <div class="modal-footer">
                                 <button class="btn btn-primary" style="width:100%;" type="submit">Submit</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createHotelModel" id="create_hotel_modal" hidden></button>
-            <div class="modal fade" id="createHotelModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+
+
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create_hotel_modal" id="create_hotel_button" hidden></button>
+            <div class="modal fade" id="create_hotel_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
-                        <form>
+                        <form method="post" action="" enctype="multipart/form-data">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-3" id="exampleModalLabel">Create Hotel</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-header">
-                                <div class="row">
-                                    <div class="col-4">
-                                        <button type="button" class="btn btn-outline-danger btn-sm">Hotel</button>
-                                    </div>
-                                    <div class="col-4">
-                                        <button type="button" class="btn btn-outline-warning btn-sm">Room</button>
-                                    </div>
-                                    <div class="col-4">
-                                        <button type="button" class="btn btn-outline-success btn-sm">Facility</button>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="create_hotel_name"/>
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}"/>
+                                    @error('name')
+                                    <div class="invalid-feedback">{{$message}}</div>
+                                    @enderror
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Address</label>
-                                    <input type="text" class="form-control" id="create_hotel_address"/>
+                                    <input type="text" class="form-control @error('address') is-invalid @enderror" name="address" value="{{old('address')}}"/>
+                                    @error('address')
+                                    <div class="invalid-feedback">{{$message}}</div>
+                                    @enderror
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Phone</label>
-                                    <input type="text" class="form-control" id="create_hotel_phone"/>
+                                    <input type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{old('phone')}}"/>
+                                    @error('phone')
+                                    <div class="invalid-feedback">{{$message}}</div>
+                                    @enderror
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Number of Rooms</label>
-                                    <input type="text" class="form-control" id="create_hotel_room"/>
+                                    <label class="form-label">Email</label>
+                                    <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{old('email')}}"/>
+                                    @error('email')
+                                    <div class="invalid-feedback">{{$message}}</div>
+                                    @enderror
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Hotel Star</label>
-                                    <select class="form-select" id="create_hotel_star">
-                                        <option selected>Open this select menu</option>
+                                    <label class="form-label">Star</label>
+                                    <select class="form-select" name="star">
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
@@ -233,19 +244,300 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Description</label>
-                                    <textarea class="form-control" id="create_hotel_description" rows="5"></textarea>
+                                    <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{old('description')}}</textarea>
+                                    @error('description')
+                                    <div class="invalid-feedback">{{$message}}</div>
+                                    @enderror
                                 </div>
-                                <input type="text" class="form-control" id="create_hotel_lat" hidden/>
-                                <input type="text" class="form-control" id="create_hotel_lng" hidden/>
+                                <input type="text" class="form-control" id="lat" name="lat" hidden/>
+                                <input type="text" class="form-control" id="lng" name="lng" hidden/>
+                                <input type="hidden" class="form-control" name="toast_validation" value="Create hotel failed."/>
+                                <input type="hidden" class="form-control" name="create_hotel" value="create_hotel"/>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-primary" id="create_hotel_submit">Submit</button>
+                                <button type="button" class="btn btn-danger col" data-bs-dismiss="modal">
+                                    <span class="material-symbols-outlined">
+                                        close
+                                    </span>
+                                </button>
+                                <button type="submit" class="btn btn-primary col">
+                                    <span class="material-symbols-outlined">
+                                        done
+                                    </span>
+                                </button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
+
+
+            @foreach($hotels as $hotel)
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}" id="hotel_button_{{$hotel->id}}" hidden></button>
+                <div class="modal fade" id="hotel_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
+                                @if(!empty($user))
+                                <div class="dropdown ms-2">
+                                    <span class="material-symbols-outlined mt-2 text-primary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        arrow_drop_down
+                                    </span>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Edit</a></li>
+                                        <li><a class="dropdown-item" href="#">Delete</a></li>
+                                    </ul>
+                                </div>
+                                @endif
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="">
+                                <ul class="nav nav-underline nav-fill">
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link active">Hotel</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}" id="hotel_room_button_{{$hotel->id}}">Room</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="modal-body">
+                                <div id="hotel_image_{{$hotel->id}}" class="carousel slide mb-3" style="width:50%; margin-left: auto; margin-right: auto;">
+                                    <div class="carousel-inner">
+                                        <div class="carousel-item active">
+                                        <img src="https://cdn.britannica.com/96/115096-050-5AFDAF5D/Bellagio-Hotel-Casino-Las-Vegas.jpg" class="d-block w-100" alt="Image 1">
+                                        @if(!empty($user))
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <a href="/">Set as Thumbnail</a>
+                                        </div>
+                                        @endif
+                                        </div>
+                                        <div class="carousel-item">
+                                        <img src="https://cdn.britannica.com/39/7139-050-A88818BB/Himalayan-chocolate-point.jpg" class="d-block w-100" alt="Image 2">
+                                        </div>
+                                        <div class="carousel-item">
+                                        <img src="https://cdn.britannica.com/99/197999-050-D22B29F0/Leopard-cat.jpg" class="d-block w-100" alt="Image 3">
+                                        </div>
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#hotel_image_{{$hotel->id}}" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#hotel_image_{{$hotel->id}}" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" value="{{$hotel->name}}" disabled readonly/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" class="form-control" value="{{$hotel->address}}" disabled readonly/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Phone</label>
+                                    <input type="text" class="form-control" value="{{$hotel->phone}}" disabled readonly/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Number of Rooms</label>
+                                    <input type="text" class="form-control" value="?" disabled readonly/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Star</label>
+                                    <input type="text" class="form-control" value="{{$hotel->star}}" disabled readonly/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" rows="3" disabled readonly>{{$hotel->description}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="hotel_room_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
+                                @if(!empty($user))
+                                <div class="dropdown ms-2">
+                                    <span class="material-symbols-outlined mt-2 text-primary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        arrow_drop_down
+                                    </span>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Edit</a></li>
+                                        <li><a class="dropdown-item" href="#">Delete</a></li>
+                                    </ul>
+                                </div>
+                                @endif
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="">
+                                <ul class="nav nav-underline nav-fill">
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">Hotel</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link active">Room</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="modal-body">
+                                <div class="card mb-3">
+                                    <div class="row g-0">
+                                        <div class="col-md-4">
+                                        <img src="https://cdn.britannica.com/39/7139-050-A88818BB/Himalayan-chocolate-point.jpg" class="img-fluid rounded-start">
+                                        </div>
+                                        <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card title</h5>
+                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card mb-3">
+                                    <div class="row g-0">
+                                        <div class="col-md-4">
+                                        <img src="https://cdn.britannica.com/99/197999-050-D22B29F0/Leopard-cat.jpg" class="img-fluid rounded-start">
+                                        </div>
+                                        <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Card title</h5>
+                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @foreach($rooms as $room)
+                    @if($room->hotel_id == $room->id)
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#room_modal_{{$room->id}}" id="room_button_{{$room->id}}" hidden></button>
+                        <div class="modal fade" id="room_modal_{{$room->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
+                                        @if(!empty($user))
+                                        <div class="dropdown ms-2">
+                                            <span class="material-symbols-outlined mt-2 text-primary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                arrow_drop_down
+                                            </span>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item" href="#">Edit</a></li>
+                                                <li><a class="dropdown-item" href="#">Delete</a></li>
+                                            </ul>
+                                        </div>
+                                        @endif
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="">
+                                        <ul class="nav nav-underline nav-fill">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" aria-current="page" href="#">Hotel</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#">Room</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="#">Facility</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Name</label>
+                                            <input type="text" class="form-control" value="{{$hotel->name}}" disabled readonly/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Address</label>
+                                            <input type="text" class="form-control" value="{{$hotel->address}}" disabled readonly/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Phone</label>
+                                            <input type="text" class="form-control" value="{{$hotel->phone}}" disabled readonly/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Number of Rooms</label>
+                                            <input type="text" class="form-control" value="?" disabled readonly/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Star</label>
+                                            <input type="text" class="form-control" value="{{$hotel->star}}" disabled readonly/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Description</label>
+                                            <textarea class="form-control" rows="3" disabled readonly>{{$hotel->description}}</textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Image</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+
+                <div class="modal fade" id="hotel_facility_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
+                                @if(!empty($user))
+                                <div class="dropdown ms-2">
+                                    <span class="material-symbols-outlined mt-2 text-primary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        arrow_drop_down
+                                    </span>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#">Edit</a></li>
+                                        <li><a class="dropdown-item" href="#">Delete</a></li>
+                                    </ul>
+                                </div>
+                                @endif
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="">
+                                <ul class="nav nav-underline nav-fill">
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">Hotel</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}">Room</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link active">Facility</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" value="{{$hotel->name}}" disabled readonly/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+
+
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editHotelModel" id="updateButtonModal" hidden></button>
             <div class="modal fade" id="editHotelModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -320,6 +612,13 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById("register_button").click();
+            });
+        </script>
+        @endif
+        @if(!empty(old('create_hotel')))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("create_hotel_button").click();
             });
         </script>
         @endif
