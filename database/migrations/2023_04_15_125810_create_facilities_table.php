@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string("name");
             $table->enum('type', ['Hotel', 'Room']);
             $table->integer("count")->unsigned();
-            $table->text("description")->nullable();
             $table->timestamps();
         });
     }

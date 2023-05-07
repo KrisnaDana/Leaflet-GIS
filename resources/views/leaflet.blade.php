@@ -281,7 +281,7 @@
                                 <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
                                 @if(!empty($user))
                                 <div class="dropdown ms-2">
-                                    <span class="material-symbols-outlined mt-2 text-primary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="material-symbols-outlined mt-2 text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         arrow_drop_down
                                     </span>
                                     <ul class="dropdown-menu">
@@ -345,10 +345,6 @@
                                     <input type="text" class="form-control" value="{{$hotel->phone}}" disabled readonly/>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label">Number of Rooms</label>
-                                    <input type="text" class="form-control" value="?" disabled readonly/>
-                                </div>
-                                <div class="mb-3">
                                     <label class="form-label">Star</label>
                                     <input type="text" class="form-control" value="{{$hotel->star}}" disabled readonly/>
                                 </div>
@@ -361,19 +357,19 @@
                     </div>
                 </div>
 
+
                 <div class="modal fade" id="hotel_room_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
+                                <h1 class="modal-title fs-3" id="exampleModalLabel">Room</h1>
                                 @if(!empty($user))
                                 <div class="dropdown ms-2">
-                                    <span class="material-symbols-outlined mt-2 text-primary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="material-symbols-outlined mt-2 text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         arrow_drop_down
                                     </span>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Edit</a></li>
-                                        <li><a class="dropdown-item" href="#">Delete</a></li>
+                                        <li><a class="dropdown-item" href="#">Create</a></li>
                                     </ul>
                                 </div>
                                 @endif
@@ -393,101 +389,110 @@
                                 </ul>
                             </div>
                             <div class="modal-body">
-                                <div class="card mb-3">
-                                    <div class="row g-0">
-                                        <div class="col-md-4">
-                                        <img src="https://cdn.britannica.com/39/7139-050-A88818BB/Himalayan-chocolate-point.jpg" class="img-fluid rounded-start">
+                                @foreach($rooms as $room)
+                                    @if($room->hotel_id == $room->id)
+                                        <div class="card mb-3">
+                                            <div class="row g-0">
+                                                <div class="col-md-4">
+                                                <img src="https://cdn.britannica.com/39/7139-050-A88818BB/Himalayan-chocolate-point.jpg" class="img-fluid rounded-start">
+                                                </div>
+                                                <div class="col-md-8">
+                                                <div class="card-body">
+                                                    <div class="d-flex flex-wrap">
+                                                        <a href="" data-bs-toggle="modal" data-bs-target="#read_room_modal_{{$room->id}}" id="read_room_button_{{$room->id}}"><h4 class="card-title">{{$room->name}}</h4></a>
+                                                        @if(!empty($user))
+                                                        <div class="dropdown ms-2">
+                                                            <span class="material-symbols-outlined mt-1 text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                arrow_drop_down
+                                                            </span>
+                                                            <ul class="dropdown-menu">
+                                                                <li><a class="dropdown-item" href="#">Edit</a></li>
+                                                                <li><a class="dropdown-item" href="#">Delete</a></li>
+                                                            </ul>
+                                                        </div>
+                                                        @endif
+                                                    </div>
+                                                    
+                                                    @if(!empty($room->description))
+                                                    <p class="card-text mb-0 text-secondary">{{Str::limit($room->description, 500)}}</p>
+                                                    @endif
+                                                    <hr>
+                                                    <div class="row">
+                                                        <div class="col-5">
+                                                            <h5 class="card-title mb-1" style="color:salmon"><strong>Rp{{number_format($room->price , 0, ',', '.')}}</strong><small>/night</small></h5>
+                                                            <small class="badge rounded-pill text-bg-success text-white">{{$room->count}} Rooms Available</small>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <div class="d-flex flex-wrap">
+                                                                <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">2 AC</small></p>
+                                                                <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">2 Restaurant</small></p>
+                                                                <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">2 Toilet</small></p>
+                                                                <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">2 Spring Bed</small></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-md-8">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Card title</h5>
-                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                                        </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card mb-3">
-                                    <div class="row g-0">
-                                        <div class="col-md-4">
-                                        <img src="https://cdn.britannica.com/99/197999-050-D22B29F0/Leopard-cat.jpg" class="img-fluid rounded-start">
-                                        </div>
-                                        <div class="col-md-8">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Card title</h5>
-                                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-                                        </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                    @endif
+                                @endforeach
                             </div>
                         </div>
                     </div>
                 </div>
 
+
                 @foreach($rooms as $room)
-                    @if($room->hotel_id == $room->id)
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#room_modal_{{$room->id}}" id="room_button_{{$room->id}}" hidden></button>
-                        <div class="modal fade" id="room_modal_{{$room->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    @if($room->hotel_id == $hotel->id)
+                        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#read_room_modal_{{$room->id}}" id="read_room_button_{{$room->id}}" hidden></button> -->
+                        <div class="modal fade" id="read_room_modal_{{$room->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
-                                        @if(!empty($user))
-                                        <div class="dropdown ms-2">
-                                            <span class="material-symbols-outlined mt-2 text-primary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                arrow_drop_down
-                                            </span>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                <li><a class="dropdown-item" href="#">Delete</a></li>
-                                            </ul>
-                                        </div>
-                                        @endif
+                                        <h1 class="modal-title fs-3" id="exampleModalLabel">Room</h1>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="">
                                         <ul class="nav nav-underline nav-fill">
                                             <li class="nav-item">
-                                                <a class="nav-link active" aria-current="page" href="#">Hotel</a>
+                                                <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">Hotel</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" href="#">Room</a>
+                                                <a type="button" class="nav-link active">Room</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" href="#">Facility</a>
+                                                <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
                                             </li>
                                         </ul>
                                     </div>
                                     <div class="modal-body">
                                         <div class="mb-3">
                                             <label class="form-label">Name</label>
-                                            <input type="text" class="form-control" value="{{$hotel->name}}" disabled readonly/>
+                                            <input type="text" class="form-control" value="{{$room->name}}" disabled readonly/>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label">Address</label>
-                                            <input type="text" class="form-control" value="{{$hotel->address}}" disabled readonly/>
+                                            <label class="form-label">Price</label>
+                                            <input type="text" class="form-control" value="Rp{{number_format($room->price , 0, ',', '.')}}" disabled readonly/>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label">Phone</label>
-                                            <input type="text" class="form-control" value="{{$hotel->phone}}" disabled readonly/>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Number of Rooms</label>
-                                            <input type="text" class="form-control" value="?" disabled readonly/>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Star</label>
-                                            <input type="text" class="form-control" value="{{$hotel->star}}" disabled readonly/>
+                                            <label class="form-label">Count</label>
+                                            <input type="text" class="form-control" value="{{$room->count}}" disabled readonly/>
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Description</label>
-                                            <textarea class="form-control" rows="3" disabled readonly>{{$hotel->description}}</textarea>
+                                            <textarea class="form-control" rows="3" disabled readonly>{{$room->description}}</textarea>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label">Image</label>
+                                            <label class="form-label">Facility</label>
                                         </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}">
+                                            <span class="material-symbols-outlined">
+                                                arrow_back
+                                            </span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -495,19 +500,19 @@
                     @endif
                 @endforeach
 
+
                 <div class="modal fade" id="hotel_facility_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
+                                <h1 class="modal-title fs-3" id="exampleModalLabel">Facility</h1>
                                 @if(!empty($user))
                                 <div class="dropdown ms-2">
-                                    <span class="material-symbols-outlined mt-2 text-primary" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="material-symbols-outlined mt-2 text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         arrow_drop_down
                                     </span>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Edit</a></li>
-                                        <li><a class="dropdown-item" href="#">Delete</a></li>
+                                        <li><a class="dropdown-item" href="#">Create</a></li>
                                     </ul>
                                 </div>
                                 @endif
@@ -527,14 +532,99 @@
                                 </ul>
                             </div>
                             <div class="modal-body">
-                                <div class="mb-3">
-                                    <label class="form-label">Name</label>
-                                    <input type="text" class="form-control" value="{{$hotel->name}}" disabled readonly/>
-                                </div>
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                        <th class="text-center" scope="col-1">No</th>
+                                        <th scope="col-8">Name</th>
+                                        <th class="text-center" scope="col-1">Count</th>
+                                        <th scope="col-1">Type</th>
+                                        <th class="text-center" scope="col-1">Option</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($facilities as $facility)
+                                            @if($facility->hotel_id == $hotel->id)
+                                                <tr>
+                                                    <th class="text-center" scope="row">{{$loop->index+1}}</th>
+                                                    <td>{{$facility->name}}</td>
+                                                    <td class="text-center">{{$facility->count}}</td>
+                                                    <td>{{$facility->type}}</td>
+                                                    <td class="text-center">
+                                                        <div class="dropdown ms-2">
+                                                            <span class="material-symbols-outlined mt-1 text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                more_vert
+                                                            </span>
+                                                            <ul class="dropdown-menu">
+                                                                <li><a type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#read_facility_modal_{{$facility->id}}" id="read_facility_button_{{$facility->id}}">Detail</a></li>
+                                                                @if(!empty($user))
+                                                                <li><a type="button" class="dropdown-item" href="#">Edit</a></li>
+                                                                <li><a type="button" class="dropdown-item" href="#">Delete</a></li>
+                                                                @endif
+                                                            </ul>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
+            
+            
+                @foreach($facilities as $facility)
+                    @if($facility->hotel_id == $hotel->id)
+                        <div class="modal fade" id="read_facility_modal_{{$facility->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-3" id="exampleModalLabel">Facility</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="">
+                                        <ul class="nav nav-underline nav-fill">
+                                            <li class="nav-item">
+                                                <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">Hotel</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}">Room</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a type="button" class="nav-link active">Facility</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Name</label>
+                                            <input type="text" class="form-control" value="{{$facility->name}}" disabled readonly/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Count</label>
+                                            <input type="text" class="form-control" value="{{$facility->count}}" disabled readonly/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Type</label>
+                                            <input type="text" class="form-control" value="{{$facility->type}}" disabled readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">
+                                            <span class="material-symbols-outlined">
+                                                arrow_back
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+
+
             @endforeach
 
 
