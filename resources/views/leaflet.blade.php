@@ -355,20 +355,19 @@
                             <div class="modal-body">
                                 <div id="hotel_image_{{$hotel->id}}" class="carousel slide mb-3" style="width:50%; margin-left: auto; margin-right: auto;">
                                     <div class="carousel-inner">
-                                        <div class="carousel-item active">
-                                        <img src="https://cdn.britannica.com/96/115096-050-5AFDAF5D/Bellagio-Hotel-Casino-Las-Vegas.jpg" class="d-block w-100" alt="Image 1">
-                                        @if(!empty($user))
-                                        <div class="carousel-caption d-none d-md-block">
-                                            <a href="/">Set as Thumbnail</a>
-                                        </div>
-                                        @endif
-                                        </div>
-                                        <div class="carousel-item">
-                                        <img src="https://cdn.britannica.com/39/7139-050-A88818BB/Himalayan-chocolate-point.jpg" class="d-block w-100" alt="Image 2">
-                                        </div>
-                                        <div class="carousel-item">
-                                        <img src="https://cdn.britannica.com/99/197999-050-D22B29F0/Leopard-cat.jpg" class="d-block w-100" alt="Image 3">
-                                        </div>
+                                        @foreach($images as $image)
+                                            @if($image->type == "Hotel" && $image->hotel_id == $hotel->id)
+                                                @if($image->is_thumbnail == 1 )
+                                                    <div class="carousel-item active">
+                                                        <img src="{{url('images/hotels/'.$image->filename)}}" class="d-block w-100">
+                                                    </div>
+                                                @else
+                                                    <div class="carousel-item">
+                                                        <img src="{{url('images/hotels/'.$image->filename)}}" class="d-block w-100">
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        @endforeach
                                     </div>
                                     <button class="carousel-control-prev" type="button" data-bs-target="#hotel_image_{{$hotel->id}}" data-bs-slide="prev">
                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -416,7 +415,7 @@
                                         arrow_drop_down
                                     </span>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Create</a></li>
+                                        <li><a type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#create_room_modal_{{$hotel->id}}" id="create_room_button_{{$hotel->id}}">Create</a></li>
                                     </ul>
                                 </div>
                                 @endif
@@ -491,9 +490,136 @@
                 </div>
 
 
+                <div class="modal fade" id="create_room_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <form method="post" action="{{route('create-room', ['id' => $hotel->id])}}" enctype="multipart/form-data">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-3" id="exampleModalLabel">Room</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="">
+                                    <ul class="nav nav-underline nav-fill">
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">Hotel</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link active">Room</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Name</label>
+                                        @if(old('create_room') == $hotel->id)
+                                            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}" required/>
+                                            @error('name')
+                                            <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        @else
+                                            <input type="text" class="form-control" name="name" value="" required/>
+                                        @endif
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Price</label>
+                                        @if(old('create_room') == $hotel->id)
+                                            <div class="input-group">
+                                                <span class="input-group-text">Rp</span>
+                                                <input type="number" class="form-control @error('price') is-invalid @enderror" name="price" value="{{old('price')}}" required>
+                                                @error('price')
+                                                <div class="invalid-feedback">{{$message}}</div>
+                                                @enderror
+                                            </div>
+                                        @else
+                                            <div class="input-group">
+                                                <span class="input-group-text">Rp</span>
+                                                <input type="number" class="form-control" name="price" value="" required>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Count</label>
+                                        @if(old('create_room') == $hotel->id)
+                                            <input type="number" class="form-control @error('count') is-invalid @enderror" name="count" value="{{old('count')}}" required/>
+                                            @error('count')
+                                            <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        @else
+                                            <input type="number" class="form-control" name="count" value="" required/>
+                                        @endif
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Description</label>
+                                        @if(old('create_room'))
+                                            <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{old('description')}}</textarea>
+                                            @error('description')
+                                            <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        @else
+                                            <textarea class="form-control" name="description" rows="3"></textarea>
+                                        @endif
+                                    </div>
+                                    <div class="mb-3">
+                                        @php
+                                            $old_facilities = [];
+                                            if(!empty(old('facilities_counter'))){
+                                                for($i = 0; $i < old('facilities_counter'); $i++){
+                                                    array_push($old_facilities, old('facilities.'.$i));
+                                                }
+                                            }
+                                            if(old('create_room')){
+                                                $old_create_room = old('create_room');
+                                            }else{
+                                                $old_create_room = 0;
+                                            }
+                                            foreach($facilities as $facility){
+                                                if($facility->hotel_id == $hotel->id){
+                                                    $exist = true;
+                                                    break;
+                                                }else{
+                                                    $exist = false;
+                                                }
+                                            }
+                                        @endphp
+                                        @livewire('room-facility', ['facilities' => $facilities, 'hotel_id' => $hotel->id, 'exist' => $exist, 'old_create_room' => $old_create_room, 'crud' => 'create', 'old_facilities' => $old_facilities, 'old_count' => count($old_facilities), 'facilities_count' => 0], key($hotel->id))
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Images</label>
+                                        @if(old('create_room'))
+                                            <input class="form-control @error('images.*') is-invalid @enderror" type="file" name="images[]" multiple required>
+                                            @error('images.0')
+                                            <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        @else
+                                            <input class="form-control" type="file" name="images[]" multiple required>
+                                        @endif
+                                    </div>
+                                    <input type="hidden" class="form-control" name="toast_validation" value="Create room failed." required/>
+                                    <input type="hidden" class="form-control" name="create_room" value="{{$hotel->id}}" required/>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}">
+                                        <span class="material-symbols-outlined">
+                                            arrow_back
+                                        </span>
+                                    </button>
+                                    <button type="submit" class="btn btn-primary col">
+                                        <span class="material-symbols-outlined">
+                                            done
+                                        </span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
                 @foreach($rooms as $room)
                     @if($room->hotel_id == $hotel->id)
-                        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#read_room_modal_{{$room->id}}" id="read_room_button_{{$room->id}}" hidden></button> -->
                         <div class="modal fade" id="read_room_modal_{{$room->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                 <div class="modal-content">
@@ -834,6 +960,13 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById("create_hotel_button").click();
+            });
+        </script>
+        @endif
+        @if(!empty(old('create_room')))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("create_room_button_{{old('create_room')}}").click();
             });
         </script>
         @endif
