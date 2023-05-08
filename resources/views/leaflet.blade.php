@@ -512,7 +512,7 @@
                                         arrow_drop_down
                                     </span>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Create</a></li>
+                                        <li><a type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#create_facility_modal_{{$hotel->id}}" id="create_facility_button_{{$hotel->id}}">Create</a></li>
                                     </ul>
                                 </div>
                                 @endif
@@ -574,7 +574,84 @@
                     </div>
                 </div>
             
+                
+                <div class="modal fade" id="create_facility_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <form method="post" action="{{route('create-facility', ['id' => $hotel->id])}}">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-3" id="exampleModalLabel">Facility</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="">
+                                    <ul class="nav nav-underline nav-fill">
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">Hotel</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}">Room</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link active">Facility</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label class="form-label">Name</label>
+                                        @if(old('create_facility') == $hotel->id)
+                                            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}"/>
+                                            @error('name')
+                                            <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        @else
+                                            <input type="text" class="form-control" name="name" value=""/>
+                                        @endif
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Count</label>
+                                        @if(old('create_facility') == $hotel->id)
+                                            <input type="number" class="form-control @error('count') is-invalid @enderror" name="count" value="{{old('count')}}"/>
+                                            @error('count')
+                                            <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        @else
+                                            <input type="number" class="form-control" name="count" value=""/>
+                                        @endif
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Type</label>
+                                        <select class="form-select" name="type">
+                                            @if(old('create_facility') == $hotel->id && old('type') == "Room")
+                                                <option value="Hotel">Hotel</option>
+                                                <option value="Room" selected>Room</option>
+                                            @else
+                                                <option value="Hotel" selected>Hotel</option>
+                                                <option value="Room">Room</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                    <input type="hidden" class="form-control" name="toast_validation" value="Create facility failed."/>
+                                    <input type="hidden" class="form-control" name="create_facility" value="{{$hotel->id}}"/>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">
+                                        <span class="material-symbols-outlined">
+                                            arrow_back
+                                        </span>
+                                    </button>
+                                    <button type="submit" class="btn btn-primary col">
+                                        <span class="material-symbols-outlined">
+                                            done
+                                        </span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             
+
                 @foreach($facilities as $facility)
                     @if($facility->hotel_id == $hotel->id)
                         <div class="modal fade" id="read_facility_modal_{{$facility->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -709,6 +786,13 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById("create_hotel_button").click();
+            });
+        </script>
+        @endif
+        @if(!empty(old('create_facility')))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("create_facility_button_{{old('create_facility')}}").click();
             });
         </script>
         @endif

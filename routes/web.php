@@ -42,11 +42,11 @@ Route::middleware(['throttle:60,1'])->group(function() {
         Route::patch('/hotel/{id}', [HotelController::class, 'edit_location'])->name('edit-hotel-location');
         Route::delete('/hotel/{id}', [HotelController::class, 'delete'])->name('delete-hotel');
         
-        Route::post('/room', [RoomController::class, 'create'])->name('create-room');
+        Route::post('/room/{id}', [RoomController::class, 'create'])->name('create-room');
         Route::put('/room/{id}', [RoomController::class, 'edit'])->name('edit-room');
         Route::delete('/room/{id}', [RoomController::class, 'delete'])->name('delete-room');
         
-        Route::post('/facility', [FacilityController::class, 'create'])->name('create-facility');
+        Route::post('/facility/{id}', [FacilityController::class, 'create'])->name('create-facility');
         Route::put('/facility/{id}', [FacilityController::class, 'edit'])->name('edit-facility');
         Route::delete('/facility/{id}', [FacilityController::class, 'delete'])->name('delete-facility');
     });

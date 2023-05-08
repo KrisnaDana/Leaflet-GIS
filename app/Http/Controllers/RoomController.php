@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 class RoomController extends Controller
 {
-    public function create(Request $request){
+    public function create(Request $request, $id){
         //
     }
 
