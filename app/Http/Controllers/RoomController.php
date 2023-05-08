@@ -50,14 +50,14 @@ class RoomController extends Controller
         $i = 0;
         foreach($filenames as $filename){
             if($i == 0){
-                array_push($images, ['hotel_id' => $id, 'type' => 'Room', 'is_thumbnail' => 1, 'filename' => $filename, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
+                array_push($images, ['hotel_id' => $id, 'room_id' => $room->id, 'type' => 'Room', 'is_thumbnail' => 1, 'filename' => $filename, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
             }else{
-                array_push($images, ['hotel_id' => $id, 'type' => 'Room', 'is_thumbnail' => 0, 'filename' => $filename, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
+                array_push($images, ['hotel_id' => $id, 'room_id' => $room->id, 'type' => 'Room', 'is_thumbnail' => 0, 'filename' => $filename, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
             }
             $i++;
         }
         Image::insert($images);
-        return redirect()->route('index')->with(['toast_primary' => 'Create hotel successfully.']);
+        return redirect()->route('index')->with(['toast_primary' => 'Create room successfully.']);
     }
 
     public function edit($id, Request $request){

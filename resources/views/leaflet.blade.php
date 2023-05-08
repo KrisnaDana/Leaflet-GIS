@@ -398,6 +398,14 @@
                                     <label class="form-label">Description</label>
                                     <textarea class="form-control" rows="3" disabled readonly>{{$hotel->description}}</textarea>
                                 </div>
+                                <div>
+                                    <label class="form-label">Facility</label>
+                                    @foreach($facilities as $facility)
+                                        @if($facility->hotel_id == $hotel->id)
+                                            <input type="text" class="form-control mb-3" value="{{$facility->count}} {{$facility->name}}" disabled readonly/>
+                                        @endif
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -436,11 +444,16 @@
                             </div>
                             <div class="modal-body">
                                 @foreach($rooms as $room)
-                                    @if($room->hotel_id == $room->id)
+                                    @if($room->hotel_id == $hotel->id)
                                         <div class="card mb-3">
                                             <div class="row g-0">
                                                 <div class="col-md-4">
-                                                <img src="https://cdn.britannica.com/39/7139-050-A88818BB/Himalayan-chocolate-point.jpg" class="img-fluid rounded-start">
+                                                    @foreach($images as $image)
+                                                        @if($image->hotel_id == $hotel->id && $image->room_id == $room->id && $image->type == "Room" && $image->is_thumbnail == "1")
+                                                        <img src="{{url('images/rooms/'.$image->filename)}}" class="img-fluid rounded-start">
+                                                        @break
+                                                        @endif
+                                                    @endforeach
                                                 </div>
                                                 <div class="col-md-8">
                                                 <div class="card-body">
@@ -641,6 +654,31 @@
                                         </ul>
                                     </div>
                                     <div class="modal-body">
+                                        <div id="room_image_{{$room->id}}" class="carousel slide mb-3" style="width:50%; margin-left: auto; margin-right: auto;">
+                                            <div class="carousel-inner">
+                                                @foreach($images as $image)
+                                                    @if($image->hotel_id == $hotel->id && $image->room_id == $room->id && $image->type == "Room")
+                                                        @if($image->is_thumbnail == 1)
+                                                            <div class="carousel-item active">
+                                                                <img src="{{url('images/rooms/'.$image->filename)}}" class="d-block w-100">
+                                                            </div>
+                                                        @else
+                                                            <div class="carousel-item">
+                                                                <img src="{{url('images/rooms/'.$image->filename)}}" class="d-block w-100">
+                                                            </div>
+                                                        @endif
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#hotel_room_{{$room->id}}" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Previous</span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button" data-bs-target="#hotel_room_{{$room->id}}" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Next</span>
+                                            </button>
+                                        </div>
                                         <div class="mb-3">
                                             <label class="form-label">Name</label>
                                             <input type="text" class="form-control" value="{{$room->name}}" disabled readonly/>
@@ -657,8 +695,13 @@
                                             <label class="form-label">Description</label>
                                             <textarea class="form-control" rows="3" disabled readonly>{{$room->description}}</textarea>
                                         </div>
-                                        <div class="mb-3">
+                                        <div>
                                             <label class="form-label">Facility</label>
+                                            @foreach($room_facilities as $room_facility)
+                                                @if($room_facility->room_id == $room->id)
+                                                    <input type="text" class="form-control mb-3" value="{{$room_facility->facility->count}} {{$room_facility->facility->name}}" disabled readonly/>
+                                                @endif
+                                            @endforeach
                                         </div>
                                     </div>
                                     <div class="modal-footer">
