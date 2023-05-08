@@ -206,52 +206,68 @@
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label class="form-label">Name</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}"/>
-                                    @error('name')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    @if(old('create_hotel'))
+                                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}"/>
+                                        @error('name')
+                                        <div class="invalid-feedback">{{$message}}</div>
+                                        @enderror
+                                    @else
+                                        <input type="text" class="form-control" name="name" value=""/>
+                                    @endif
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Address</label>
-                                    <input type="text" class="form-control @error('address') is-invalid @enderror" name="address" value="{{old('address')}}"/>
-                                    @error('address')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    @if(old('create_hotel'))
+                                        <input type="text" class="form-control @error('address') is-invalid @enderror" name="address" value="{{old('address')}}"/>
+                                        @error('address')
+                                        <div class="invalid-feedback">{{$message}}</div>
+                                        @enderror
+                                    @else
+                                        <input type="text" class="form-control" name="address" value=""/>
+                                    @endif
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Phone</label>
-                                    <input type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{old('phone')}}"/>
-                                    @error('phone')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    @if(old('create_hotel'))
+                                        <input type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{old('phone')}}"/>
+                                        @error('phone')
+                                        <div class="invalid-feedback">{{$message}}</div>
+                                        @enderror
+                                    @else
+                                        <input type="text" class="form-control" name="phone" value=""/>
+                                    @endif
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Email</label>
-                                    <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{old('email')}}"/>
-                                    @error('email')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    @if(old('create_hotel'))
+                                        <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{old('email')}}"/>
+                                        @error('email')
+                                        <div class="invalid-feedback">{{$message}}</div>
+                                        @enderror
+                                    @else
+                                        <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value=""/>
+                                    @endif
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Star</label>
                                     <select class="form-select" name="star">
                                         <option value="1" selected>1</option>
-                                        @if(old('star') == "2")
+                                        @if(old('create_hotel') && old('star') == "2")
                                             <option value="2" selected>2</option>
                                         @else
                                             <option value="2">2</option>
                                         @endif
-                                        @if(old('star') == "3")
+                                        @if(old('create_hotel') && old('star') == "3")
                                             <option value="3" selected>3</option>
                                         @else
                                             <option value="3">3</option>
                                         @endif
-                                        @if(old('star') == "4")
+                                        @if(old('create_hotel') && old('star') == "4")
                                             <option value="4" selected>4</option>
                                         @else
                                             <option value="4">4</option>
                                         @endif
-                                        @if(old('star') == "5")
+                                        @if(old('create_hotel') && old('star') == "5")
                                             <option value="5" selected>5</option>
                                         @else
                                             <option value="5">5</option>
@@ -260,17 +276,25 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Description</label>
-                                    <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{old('description')}}</textarea>
-                                    @error('description')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    @if(old('create_hotel'))
+                                        <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{old('description')}}</textarea>
+                                        @error('description')
+                                        <div class="invalid-feedback">{{$message}}</div>
+                                        @enderror
+                                    @else
+                                        <textarea class="form-control" name="description" rows="3"></textarea>
+                                    @endif
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Images</label>
-                                    <input class="form-control @error('images.*') is-invalid @enderror" type="file" name="images[]" multiple required>
-                                    @error('images.0')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
+                                    @if(old('create_hotel'))
+                                        <input class="form-control @error('images.*') is-invalid @enderror" type="file" name="images[]" multiple required>
+                                        @error('images.0')
+                                        <div class="invalid-feedback">{{$message}}</div>
+                                        @enderror
+                                    @else
+                                        <input class="form-control" type="file" name="images[]" multiple required>
+                                    @endif
                                 </div>
                                 <input type="text" class="form-control" id="lat" name="lat" hidden/>
                                 <input type="text" class="form-control" id="lng" name="lng" hidden/>

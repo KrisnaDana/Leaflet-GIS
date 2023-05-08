@@ -29,7 +29,7 @@ class HotelController extends Controller
 
     public function create(Request $request){
         $validated = $request->validate([
-            'name' => 'required|string|min:1|max:50',
+            'name' => 'required|string|min:1|max:20',
             'address' => 'required|string|min:1|max:100',
             'phone' => 'required|string|digits_between:3,20',
             'email' => 'required|string|email:rfc,dns',
