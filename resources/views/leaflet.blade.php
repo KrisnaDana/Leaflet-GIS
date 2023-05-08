@@ -133,8 +133,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <input type="hidden" class="form-control" name="toast_validation" value="Login failed."/>
-                                <input type="hidden" class="form-control" name="login" value="login"/>
+                                <input type="hidden" class="form-control" name="toast_validation" value="Login failed." required/>
+                                <input type="hidden" class="form-control" name="login" value="login" required/>
                                 <button class="btn btn-primary" style="width:100%;" type="submit">Submit</button>
                             </div>
                         </form>
@@ -155,34 +155,34 @@
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label class="form-label">Name</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}">
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}" required>
                                     @error('name')
                                     <div class="invalid-feedback">{{$message}}</div>
                                     @enderror
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Email</label>
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{old('email')}}">
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{old('email')}}" required>
                                     @error('email')
                                     <div class="invalid-feedback">{{$message}}</div>
                                     @enderror
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Password</label>
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password"/>
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password" required/>
                                     @error('password')
                                     <div class="invalid-feedback">{{$message}}</div>
                                     @enderror
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Password Confirmation</label>
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password_confirmation"/>
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" name="password_confirmation" required/>
                                     @error('password_confirmation')
                                     <div class="invalid-feedback">{{$message}}</div>
                                     @enderror
                                 </div>
-                                <input type="hidden" class="form-control" name="toast_validation" value="Register failed."/>
-                                <input type="hidden" class="form-control" name="register" value="register"/>
+                                <input type="hidden" class="form-control" name="toast_validation" value="Register failed." required/>
+                                <input type="hidden" class="form-control" name="register" value="register" required/>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-primary" style="width:100%;" type="submit">Submit</button>
@@ -198,7 +198,7 @@
             <div class="modal fade" id="create_hotel_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
-                        <form method="post" action="" enctype="multipart/form-data">
+                        <form method="post" action="{{route('create-hotel')}}" enctype="multipart/form-data">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-3" id="exampleModalLabel">Create Hotel</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -235,17 +235,40 @@
                                 <div class="mb-3">
                                     <label class="form-label">Star</label>
                                     <select class="form-select" name="star">
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
+                                        <option value="1" selected>1</option>
+                                        @if(old('star') == "2")
+                                            <option value="2" selected>2</option>
+                                        @else
+                                            <option value="2">2</option>
+                                        @endif
+                                        @if(old('star') == "3")
+                                            <option value="3" selected>3</option>
+                                        @else
+                                            <option value="3">3</option>
+                                        @endif
+                                        @if(old('star') == "4")
+                                            <option value="4" selected>4</option>
+                                        @else
+                                            <option value="4">4</option>
+                                        @endif
+                                        @if(old('star') == "5")
+                                            <option value="5" selected>5</option>
+                                        @else
+                                            <option value="5">5</option>
+                                        @endif
                                     </select>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Description</label>
                                     <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{old('description')}}</textarea>
                                     @error('description')
+                                    <div class="invalid-feedback">{{$message}}</div>
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Images</label>
+                                    <input class="form-control @error('images.*') is-invalid @enderror" type="file" name="images[]" multiple required>
+                                    @error('images.0')
                                     <div class="invalid-feedback">{{$message}}</div>
                                     @enderror
                                 </div>
@@ -424,10 +447,11 @@
                                                         </div>
                                                         <div class="col-7">
                                                             <div class="d-flex flex-wrap">
-                                                                <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">2 AC</small></p>
-                                                                <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">2 Restaurant</small></p>
-                                                                <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">2 Toilet</small></p>
-                                                                <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">2 Spring Bed</small></p>
+                                                                @foreach($room_facilities as $room_facility)
+                                                                    @if($room_facility->room_id == $room->id)
+                                                                        <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">{{$room_facility->facility->count." ".$room_facility->facility->name}}</small></p>
+                                                                    @endif
+                                                                @endforeach
                                                             </div>
                                                         </div>
                                                     </div>
@@ -600,23 +624,23 @@
                                     <div class="mb-3">
                                         <label class="form-label">Name</label>
                                         @if(old('create_facility') == $hotel->id)
-                                            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}"/>
+                                            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}" required/>
                                             @error('name')
                                             <div class="invalid-feedback">{{$message}}</div>
                                             @enderror
                                         @else
-                                            <input type="text" class="form-control" name="name" value=""/>
+                                            <input type="text" class="form-control" name="name" value="" required/>
                                         @endif
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Count</label>
                                         @if(old('create_facility') == $hotel->id)
-                                            <input type="number" class="form-control @error('count') is-invalid @enderror" name="count" value="{{old('count')}}"/>
+                                            <input type="number" class="form-control @error('count') is-invalid @enderror" name="count" value="{{old('count')}}" required/>
                                             @error('count')
                                             <div class="invalid-feedback">{{$message}}</div>
                                             @enderror
                                         @else
-                                            <input type="number" class="form-control" name="count" value=""/>
+                                            <input type="number" class="form-control" name="count" value="" required/>
                                         @endif
                                     </div>
                                     <div class="mb-3">
@@ -631,8 +655,8 @@
                                             @endif
                                         </select>
                                     </div>
-                                    <input type="hidden" class="form-control" name="toast_validation" value="Create facility failed."/>
-                                    <input type="hidden" class="form-control" name="create_facility" value="{{$hotel->id}}"/>
+                                    <input type="hidden" class="form-control" name="toast_validation" value="Create facility failed." required/>
+                                    <input type="hidden" class="form-control" name="create_facility" value="{{$hotel->id}}" required/>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">

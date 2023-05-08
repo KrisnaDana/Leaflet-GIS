@@ -9,6 +9,7 @@ use App\Models\Room;
 use App\Models\RoomFacility;
 use App\Models\Image;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class HotelController extends Controller
 {
@@ -30,10 +31,12 @@ class HotelController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|min:1|max:50',
             'address' => 'required|string|min:1|max:100',
-            'star' => 'required|in:1,2,3,4,5',
-            'phone' => 'required|numeric|digits_between:3,20',
+            'phone' => 'required|string|digits_between:3,20',
             'email' => 'required|string|email:rfc,dns',
+            'star' => 'required|in:1,2,3,4,5',
             'description' => 'nullable|string|max:500',
+            'images.0' => 'required|file|image|max:2048',
+            'images.*' => 'nullable|file|image|max:2048',
             'lat' => 'required|numeric',
             'lng' => 'required|numeric',
         ]);
@@ -42,14 +45,35 @@ class HotelController extends Controller
             'address' => $validated['address'],
             'star' => $validated['star'],
             'phone' => $validated['phone'],
-            'email' => $validated['email']
+            'email' => $validated['email'],
+            'lat' => $validated['lat'],
+            'lng' => $validated['lng'],
         );
         if(!empty($validated['description'])){
             $hotel['description'] = $validated['description'];
         }
         Hotel::create($hotel);
+        $hotel = Hotel::where('name', $validated['name'])->where('lat', $validated['lat'])->where('lng', $validated['lng'])->first();
+        $filenames = [];
+        for($i=0; $i < count($validated['images']); $i++){
+            $image = $request->file('images')[$i];
+            $filename = Str::slug($validated['name']) . '-' . time() . $i. '.' . $image->getClientOriginalExtension();
+            $path = public_path('/images/hotels');
+            $image->move($path, $filename);
+            array_push($filenames, $filename);
+        }
+        $images = [];
+        $i = 0;
+        foreach($filenames as $filename){
+            if($i == 0){
+                array_push($images, ['hotel_id' => $hotel->id, 'type' => 'Hotel', 'is_thumbnail' => 1, 'filename' => $filename, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
+            }else{
+                array_push($images, ['hotel_id' => $hotel->id, 'type' => 'Hotel', 'is_thumbnail' => 0, 'filename' => $filename, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
+            }
+            $i++;
+        }
+        Image::insert($images);
         return redirect()->route('index')->with(['toast_primary' => 'Create hotel successfully.']);
-
     }
 
     public function edit($id, Request $request){
