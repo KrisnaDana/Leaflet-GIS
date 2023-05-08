@@ -53,7 +53,7 @@ class HotelController extends Controller
             $hotel['description'] = $validated['description'];
         }
         Hotel::create($hotel);
-        $hotel = Hotel::where('name', $validated['name'])->where('lat', $validated['lat'])->where('lng', $validated['lng'])->first();
+        $hotel = Hotel::where('name', $validated['name'])->where('lat', $validated['lat'])->where('lng', $validated['lng'])->orderBy('id', 'desc')->first();
         $filenames = [];
         for($i=0; $i < count($validated['images']); $i++){
             $image = $request->file('images')[$i];
