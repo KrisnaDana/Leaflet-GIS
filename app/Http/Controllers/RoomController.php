@@ -7,12 +7,13 @@ use App\Models\Room;
 use App\Models\RoomFacility;
 use App\Models\Image;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class RoomController extends Controller
 {
     public function create(Request $request, $id){
         $validated = $request->validate([
-            'name' => 'required|string|min:1|max:20',
+            'name' => 'required|string|min:1|max:20|unique:App\Models\Room,name',
             'price' => 'required|numeric|min:0',
             'count' => 'required|integer|min:1',
             'facilities.*' => 'nullable',
@@ -36,8 +37,8 @@ class RoomController extends Controller
             for($i=0; $i < count($validated['facilities']); $i++){
                 array_push($room_facilities, ['room_id' => $room->id, 'facility_id' => $validated['facilities'][$i], 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
             }
+            RoomFacility::insert($room_facilities);
         }
-        RoomFacility::insert($room_facilities);
         $filenames = [];
         for($i=0; $i < count($validated['images']); $i++){
             $image = $request->file('images')[$i];
@@ -57,14 +58,26 @@ class RoomController extends Controller
             $i++;
         }
         Image::insert($images);
-        return redirect()->route('index')->with(['toast_primary' => 'Create room successfully.']);
+        return redirect()->route('index')->with(['toast_primary' => 'Create room successfully.', 'create_room' => $id]);
     }
 
     public function edit($id, Request $request){
         //
     }
 
-    public function delete($id){
-        //
+    public function delete($id, $hotel_id){
+        $images = Image::where('room_id', $id)->get();
+        $path = public_path('/images/rooms/');
+        foreach($images as $image){
+            File::delete($path.$image->filename);
+            $image->delete();
+        }
+        $room_facilities = RoomFacility::where('facility_id', $id)->get();
+        foreach($room_facilities as $room_facility){
+            $room_facility->delete();
+        }
+        $room = Room::find($id);
+        $room->delete();
+        return redirect()->route('index')->with(['toast_primary' => 'Delete room successfully.', 'delete_room' => $hotel_id]);
     }
 }

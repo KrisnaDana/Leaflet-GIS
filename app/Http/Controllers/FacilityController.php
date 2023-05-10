@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Facility;
+use App\Models\RoomFacility;
 
 class FacilityController extends Controller
 {
@@ -21,14 +22,20 @@ class FacilityController extends Controller
             'count' => $validated['count']
         );
         Facility::create($facility);
-        return redirect()->route('index')->with(['toast_primary' => 'Create facility successfully.']);
+        return redirect()->route('index')->with(['toast_primary' => 'Create facility successfully.', 'create_facility' => $id]);
     }
 
     public function edit($id, Request $request){
         //
     }
 
-    public function delete($id){
-        //
+    public function delete($id, $hotel_id){
+        $room_facilities = RoomFacility::where('facility_id', $id)->get();
+        foreach($room_facilities as $room_facility){
+            $room_facility->delete();
+        }
+        $facility = Facility::find($id);
+        $facility->delete();
+        return redirect()->route('index')->with(['toast_primary' => 'Delete facility successfully.', 'delete_facility' => $hotel_id]);
     }
 }

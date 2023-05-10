@@ -333,7 +333,7 @@
                                     </span>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="#">Edit</a></li>
-                                        <li><a class="dropdown-item" href="#">Delete</a></li>
+                                        <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#delete_hotel_modal_{{$hotel->id}}">Delete</a></li>
                                     </ul>
                                 </div>
                                 @endif
@@ -412,6 +412,38 @@
                 </div>
 
 
+                <div class="modal fade" id="delete_hotel_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <form method="post" action="{{route('delete-hotel', ['id' => $hotel->id, 'hotel_id' => $hotel->id])}}">
+                                @method('delete')
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <h5 class="lead">Are you sure want to delete hotel: {{$hotel->name}}?</h5>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">
+                                        <span class="material-symbols-outlined">
+                                            arrow_back
+                                        </span>
+                                    </button>
+                                    <button type="submit" class="btn btn-primary col">
+                                        <span class="material-symbols-outlined">
+                                            done
+                                        </span>
+                                   </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}" id="room_button_{{$hotel->id}}" hidden></button>
                 <div class="modal fade" id="hotel_room_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
@@ -466,7 +498,7 @@
                                                             </span>
                                                             <ul class="dropdown-menu">
                                                                 <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                                <li><a class="dropdown-item" href="#">Delete</a></li>
+                                                                <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#delete_room_modal_{{$room->id}}">Delete</a></li>
                                                             </ul>
                                                         </div>
                                                         @endif
@@ -633,6 +665,8 @@
 
                 @foreach($rooms as $room)
                     @if($room->hotel_id == $hotel->id)
+
+
                         <div class="modal fade" id="read_room_modal_{{$room->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                 <div class="modal-content">
@@ -714,10 +748,42 @@
                                 </div>
                             </div>
                         </div>
+
+
+                        <div class="modal fade" id="delete_room_modal_{{$room->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <form method="post" action="{{route('delete-room', ['id' => $room->id, 'hotel_id' => $hotel->id])}}">
+                                        @method('delete')
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-3" id="exampleModalLabel">Room</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <h5 class="lead">Are you sure want to delete room: {{$room->name}}?</h5>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}">
+                                                <span class="material-symbols-outlined">
+                                                    arrow_back
+                                                </span>
+                                            </button>
+                                            <button type="submit" class="btn btn-primary col">
+                                                <span class="material-symbols-outlined">
+                                                    done
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     @endif
                 @endforeach
 
-
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}" id="facility_button_{{$hotel->id}}" hidden></button>
                 <div class="modal fade" id="hotel_facility_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
@@ -779,7 +845,7 @@
                                                                 <li><a type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#read_facility_modal_{{$facility->id}}" id="read_facility_button_{{$facility->id}}">Detail</a></li>
                                                                 @if(!empty($user))
                                                                 <li><a type="button" class="dropdown-item" href="#">Edit</a></li>
-                                                                <li><a type="button" class="dropdown-item" href="#">Delete</a></li>
+                                                                <li><a type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete_facility_modal_{{$facility->id}}">Delete</a></li>
                                                                 @endif
                                                             </ul>
                                                         </div>
@@ -877,6 +943,8 @@
 
                 @foreach($facilities as $facility)
                     @if($facility->hotel_id == $hotel->id)
+
+
                         <div class="modal fade" id="read_facility_modal_{{$facility->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-lg">
                                 <div class="modal-content">
@@ -918,6 +986,38 @@
                                             </span>
                                         </button>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="modal fade" id="delete_facility_modal_{{$facility->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <form method="post" action="{{route('delete-facility', ['id' => $facility->id, 'hotel_id' => $hotel->id])}}">
+                                        @method('delete')
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-3" id="exampleModalLabel">Facility</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <h5 class="lead">Are you sure want to delete facility: {{$facility->count}} {{$facility->name}}?</h5>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">
+                                                <span class="material-symbols-outlined">
+                                                    arrow_back
+                                                </span>
+                                            </button>
+                                            <button type="submit" class="btn btn-primary col">
+                                                <span class="material-symbols-outlined">
+                                                    done
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -1023,6 +1123,34 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById("create_facility_button_{{old('create_facility')}}").click();
+            });
+        </script>
+        @endif
+        @if($create_room = Session::get('create_room'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("room_button_{{$create_room}}").click();
+            });
+        </script>
+        @endif
+        @if($delete_room = Session::get('delete_room'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("room_button_{{$delete_room}}").click();
+            });
+        </script>
+        @endif
+        @if($create_facility = Session::get('create_facility'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("facility_button_{{$create_facility}}").click();
+            });
+        </script>
+        @endif
+        @if($delete_facility = Session::get('delete_facility'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("facility_button_{{$delete_facility}}").click();
             });
         </script>
         @endif

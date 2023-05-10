@@ -10,6 +10,7 @@ use App\Models\RoomFacility;
 use App\Models\Image;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\File;
 
 class HotelController extends Controller
 {
@@ -85,6 +86,31 @@ class HotelController extends Controller
     }
 
     public function delete($id){
-        //
+        $images = Image::where('hotel_id', $id)->get();
+        $hotel_path = public_path('/images/hotels/');
+        $room_path = public_path('/images/rooms/');
+        foreach($images as $image){
+            if($image->room_id != 0){
+                File::delete($room_path.$image->filename);
+            }else{
+                File::delete($hotel_path.$image->filename);
+            }
+            $image->delete();
+        }
+        $rooms = Room::where('hotel_id', $id)->get();
+        foreach($rooms as $room){
+            $room_facilities = Room::where('hotel_id', $room->id)->get();
+            foreach($room_facilities as $room_facility){
+                $room_facility->delete();
+            }
+            $room->delete();
+        }
+        $facilities = Facility::where('hotel_id', $id)->get();
+        foreach($facilities as $facility){
+            $facility->delete();
+        }
+        $hotel = Hotel::find($id);
+        $hotel->delete();
+        return redirect()->route('index')->with(['toast_primary' => 'Delete hotel successfully.']);
     }
 }
