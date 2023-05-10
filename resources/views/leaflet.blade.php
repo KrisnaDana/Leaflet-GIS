@@ -401,7 +401,7 @@
                                 <div>
                                     <label class="form-label">Facility</label>
                                     @foreach($facilities as $facility)
-                                        @if($facility->hotel_id == $hotel->id)
+                                        @if($facility->hotel_id == $hotel->id && $facility->type == "Hotel")
                                             <input type="text" class="form-control mb-3" value="{{$facility->count}} {{$facility->name}}" disabled readonly/>
                                         @endif
                                     @endforeach
@@ -760,10 +760,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php
+                                            $i = 1;
+                                        @endphp
                                         @foreach($facilities as $facility)
                                             @if($facility->hotel_id == $hotel->id)
                                                 <tr>
-                                                    <th class="text-center" scope="row">{{$loop->index+1}}</th>
+                                                    <th class="text-center" scope="row">{{$i}}</th>
                                                     <td>{{$facility->name}}</td>
                                                     <td class="text-center">{{$facility->count}}</td>
                                                     <td>{{$facility->type}}</td>
@@ -782,6 +785,9 @@
                                                         </div>
                                                     </td>
                                                 </tr>
+                                                @php
+                                                    $i++;
+                                                @endphp
                                             @endif
                                         @endforeach
                                     </tbody>

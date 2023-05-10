@@ -9,7 +9,7 @@
                 @for($i = 0; $i < $old_count; $i++)
                     <select class="form-control mb-3" name="facilities[]">
                         @foreach($facilities as $facility)
-                            @if($facility->hotel_id == $hotel_id)
+                            @if($facility->hotel_id == $hotel_id && $facility->type == "Room")
                                 @if($facility->id == $old_facilities[$i])
                                 <option selected value="{{$facility->id}}">{{$facility->count}} {{$facility->name}}</option>
                                 @else
@@ -23,7 +23,7 @@
             @for($i = 0; $i < $count; $i++)
                 <select class="form-control mb-3" name="facilities[]">
                     @foreach($facilities as $facility)
-                        @if($facility->hotel_id == $hotel_id)
+                        @if($facility->hotel_id == $hotel_id && $facility->type == "Room")
                             <option value="{{$facility->id}}">{{$facility->count}} {{$facility->name}}</option>
                         @endif
                     @endforeach
