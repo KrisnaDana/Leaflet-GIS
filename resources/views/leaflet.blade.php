@@ -332,7 +332,7 @@
                                         arrow_drop_down
                                     </span>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#">Edit</a></li>
+                                        <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#edit_hotel_modal_{{$hotel->id}}" id="edit_hotel_button_{{$hotel->id}}">Edit</a></li>
                                         <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#delete_hotel_modal_{{$hotel->id}}">Delete</a></li>
                                     </ul>
                                 </div>
@@ -497,7 +497,7 @@
                                                                 arrow_drop_down
                                                             </span>
                                                             <ul class="dropdown-menu">
-                                                                <li><a class="dropdown-item" href="#">Edit</a></li>
+                                                                <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#edit_room_modal_{{$room->id}}" id="edit_room_button_{{$room->id}}">Edit</a></li>
                                                                 <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#delete_room_modal_{{$room->id}}">Delete</a></li>
                                                             </ul>
                                                         </div>
@@ -844,7 +844,7 @@
                                                             <ul class="dropdown-menu">
                                                                 <li><a type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#read_facility_modal_{{$facility->id}}" id="read_facility_button_{{$facility->id}}">Detail</a></li>
                                                                 @if(!empty($user))
-                                                                <li><a type="button" class="dropdown-item" href="#">Edit</a></li>
+                                                                <li><a type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit_facility_modal_{{$facility->id}}" id="edit_facility_button_{{$facility->id}}">Edit</a></li>
                                                                 <li><a type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#delete_facility_modal_{{$facility->id}}">Delete</a></li>
                                                                 @endif
                                                             </ul>
@@ -1133,6 +1133,13 @@
             });
         </script>
         @endif
+        @if($edit_room = Session::get('edit_room'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("edit_room_button_{{$edit_room}}").click();
+            });
+        </script>
+        @endif
         @if($delete_room = Session::get('delete_room'))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -1144,6 +1151,13 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById("facility_button_{{$create_facility}}").click();
+            });
+        </script>
+        @endif
+        @if($edit_facility = Session::get('edit_facility'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("edit_facility_button_{{$edit_facility}}").click();
             });
         </script>
         @endif
