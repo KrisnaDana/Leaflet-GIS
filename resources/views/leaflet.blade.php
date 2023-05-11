@@ -196,7 +196,7 @@
 
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create_hotel_modal" id="create_hotel_button" hidden></button>
             <div class="modal fade" id="create_hotel_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                     <div class="modal-content">
                         <form method="post" action="{{route('create-hotel')}}" enctype="multipart/form-data">
                             <div class="modal-header">
@@ -322,7 +322,7 @@
             @foreach($hotels as $hotel)
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}" id="hotel_button_{{$hotel->id}}" hidden></button>
                 <div class="modal fade" id="hotel_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
@@ -445,7 +445,7 @@
 
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}" id="room_button_{{$hotel->id}}" hidden></button>
                 <div class="modal fade" id="hotel_room_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-3" id="exampleModalLabel">Room</h1>
@@ -536,7 +536,7 @@
 
 
                 <div class="modal fade" id="create_room_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
                             <form method="post" action="{{route('create-room', ['id' => $hotel->id])}}" enctype="multipart/form-data">
                                 <div class="modal-header">
@@ -668,7 +668,7 @@
 
 
                         <div class="modal fade" id="read_room_modal_{{$room->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h1 class="modal-title fs-3" id="exampleModalLabel">Room</h1>
@@ -785,7 +785,7 @@
 
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}" id="facility_button_{{$hotel->id}}" hidden></button>
                 <div class="modal fade" id="hotel_facility_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-3" id="exampleModalLabel">Facility</h1>
@@ -865,7 +865,7 @@
             
                 
                 <div class="modal fade" id="create_facility_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
                             <form method="post" action="{{route('create-facility', ['id' => $hotel->id])}}">
                                 <div class="modal-header">
@@ -946,7 +946,7 @@
 
 
                         <div class="modal fade" id="read_facility_modal_{{$facility->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h1 class="modal-title fs-3" id="exampleModalLabel">Facility</h1>
