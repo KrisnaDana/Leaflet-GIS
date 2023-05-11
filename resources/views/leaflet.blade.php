@@ -296,8 +296,13 @@
                                         <input class="form-control" type="file" name="images[]" multiple required>
                                     @endif
                                 </div>
-                                <input type="text" class="form-control" id="lat" name="lat" hidden/>
-                                <input type="text" class="form-control" id="lng" name="lng" hidden/>
+                                @if(old('create_hotel'))
+                                    <input type="text" class="form-control" id="lat" name="lat" hidden value="{{old('lat')}}"/>
+                                    <input type="text" class="form-control" id="lng" name="lng" hidden value="{{old('lng')}}"/>
+                                @else
+                                    <input type="text" class="form-control" id="lat" name="lat" hidden/>
+                                    <input type="text" class="form-control" id="lng" name="lng" hidden/>
+                                @endif
                                 <input type="hidden" class="form-control" name="toast_validation" value="Create hotel failed."/>
                                 <input type="hidden" class="form-control" name="create_hotel" value="create_hotel"/>
                             </div>
@@ -402,7 +407,11 @@
                                     <label class="form-label">Facility</label>
                                     @foreach($facilities as $facility)
                                         @if($facility->hotel_id == $hotel->id && $facility->type == "Hotel")
-                                            <input type="text" class="form-control mb-3" value="{{$facility->count}} {{$facility->name}}" disabled readonly/>
+                                            @if($facility->count == 0)
+                                                <input type="text" class="form-control mb-3" value="{{$facility->name}}" disabled readonly/>
+                                            @else
+                                                <input type="text" class="form-control mb-3" value="{{$facility->count}} {{$facility->name}}" disabled readonly/>
+                                            @endif
                                         @endif
                                     @endforeach
                                 </div>
@@ -517,7 +526,11 @@
                                                             <div class="d-flex flex-wrap">
                                                                 @foreach($room_facilities as $room_facility)
                                                                     @if($room_facility->room_id == $room->id)
-                                                                        <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">{{$room_facility->facility->count." ".$room_facility->facility->name}}</small></p>
+                                                                        @if($room_facility->facility->count == 0)
+                                                                            <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">{{$room_facility->facility->name}}</small></p>
+                                                                        @else
+                                                                            <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">{{$room_facility->facility->count." ".$room_facility->facility->name}}</small></p>
+                                                                        @endif
                                                                     @endif
                                                                 @endforeach
                                                             </div>
@@ -536,7 +549,7 @@
 
 
                 <div class="modal fade" id="create_room_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
                         <div class="modal-content">
                             <form method="post" action="{{route('create-room', ['id' => $hotel->id])}}" enctype="multipart/form-data">
                                 <div class="modal-header">
@@ -581,7 +594,7 @@
                                         @else
                                             <div class="input-group">
                                                 <span class="input-group-text">Rp</span>
-                                                <input type="number" class="form-control" name="price" value="" required>
+                                                <input type="number" class="form-control" name="price" value="" placeholder="Price per night" required>
                                             </div>
                                         @endif
                                     </div>
@@ -620,12 +633,11 @@
                                             }else{
                                                 $old_create_room = 0;
                                             }
+                                            $exist = false;
                                             foreach($facilities as $facility){
                                                 if($facility->hotel_id == $hotel->id){
                                                     $exist = true;
                                                     break;
-                                                }else{
-                                                    $exist = false;
                                                 }
                                             }
                                         @endphp
@@ -704,11 +716,11 @@
                                                     @endif
                                                 @endforeach
                                             </div>
-                                            <button class="carousel-control-prev" type="button" data-bs-target="#hotel_room_{{$room->id}}" data-bs-slide="prev">
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#room_image_{{$room->id}}" data-bs-slide="prev">
                                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                                 <span class="visually-hidden">Previous</span>
                                             </button>
-                                            <button class="carousel-control-next" type="button" data-bs-target="#hotel_room_{{$room->id}}" data-bs-slide="next">
+                                            <button class="carousel-control-next" type="button" data-bs-target="#room_image_{{$room->id}}" data-bs-slide="next">
                                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                                 <span class="visually-hidden">Next</span>
                                             </button>
@@ -733,7 +745,11 @@
                                             <label class="form-label">Facility</label>
                                             @foreach($room_facilities as $room_facility)
                                                 @if($room_facility->room_id == $room->id)
-                                                    <input type="text" class="form-control mb-3" value="{{$room_facility->facility->count}} {{$room_facility->facility->name}}" disabled readonly/>
+                                                    @if($room_facility->facility->count == 0)
+                                                        <input type="text" class="form-control mb-3" value="{{$room_facility->facility->name}}" disabled readonly/>
+                                                    @else
+                                                        <input type="text" class="form-control mb-3" value="{{$room_facility->facility->count}} {{$room_facility->facility->name}}" disabled readonly/>
+                                                    @endif
                                                 @endif
                                             @endforeach
                                         </div>
@@ -834,7 +850,11 @@
                                                 <tr>
                                                     <th class="text-center" scope="row">{{$i}}</th>
                                                     <td>{{$facility->name}}</td>
-                                                    <td class="text-center">{{$facility->count}}</td>
+                                                    @if($facility->count == 0)
+                                                        <td class="text-center">-</td>
+                                                    @else
+                                                        <td class="text-center">{{$facility->count}}</td>
+                                                    @endif
                                                     <td>{{$facility->type}}</td>
                                                     <td class="text-center">
                                                         <div class="dropdown ms-2">
@@ -905,7 +925,7 @@
                                             <div class="invalid-feedback">{{$message}}</div>
                                             @enderror
                                         @else
-                                            <input type="number" class="form-control" name="count" value="" required/>
+                                            <input type="number" class="form-control" name="count" value="" placeholder="If uncountable fill with 0" required/>
                                         @endif
                                     </div>
                                     <div class="mb-3">

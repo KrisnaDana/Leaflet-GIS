@@ -11,9 +11,9 @@ class FacilityController extends Controller
 
     public function create(Request $request, $id){
         $validated = $request->validate([
-            'name' => 'required|string|min:1|max:20',
+            'name' => 'required|string|min:1|max:50',
             'type' => 'required|in:Hotel,Room',
-            'count' => 'required|numeric|min:1'
+            'count' => 'required|numeric|min:0'
         ]);
         $facility = array(
             'hotel_id' => $id,

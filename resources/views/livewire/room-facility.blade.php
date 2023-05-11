@@ -11,9 +11,17 @@
                         @foreach($facilities as $facility)
                             @if($facility->hotel_id == $hotel_id && $facility->type == "Room")
                                 @if($facility->id == $old_facilities[$i])
-                                <option selected value="{{$facility->id}}">{{$facility->count}} {{$facility->name}}</option>
+                                    @if($facility->count == 0)
+                                        <option selected value="{{$facility->id}}">{{$facility->name}}</option>
+                                    @else
+                                        <option selected value="{{$facility->id}}">{{$facility->count}} {{$facility->name}}</option>
+                                    @endif
                                 @else
-                                <option value="{{$facility->id}}">{{$facility->count}} {{$facility->name}}</option>
+                                    @if($facility->count == 0)
+                                        <option value="{{$facility->id}}">{{$facility->name}}</option>
+                                    @else
+                                        <option selected value="{{$facility->id}}">{{$facility->count}} {{$facility->name}}</option>
+                                    @endif
                                 @endif
                             @endif
                         @endforeach
@@ -24,7 +32,11 @@
                 <select class="form-control mb-3" name="facilities[]">
                     @foreach($facilities as $facility)
                         @if($facility->hotel_id == $hotel_id && $facility->type == "Room")
-                            <option value="{{$facility->id}}">{{$facility->count}} {{$facility->name}}</option>
+                            @if($facility->count == 0)
+                                <option value="{{$facility->id}}">{{$facility->name}}</option>
+                            @else
+                                <option value="{{$facility->id}}">{{$facility->count}} {{$facility->name}}</option>
+                            @endif
                         @endif
                     @endforeach
                 </select>

@@ -30,12 +30,12 @@ class HotelController extends Controller
 
     public function create(Request $request){
         $validated = $request->validate([
-            'name' => 'required|string|min:1|max:20',
-            'address' => 'required|string|min:1|max:100',
-            'phone' => 'required|string|digits_between:3,20',
+            'name' => 'required|string|min:1|max:50',
+            'address' => 'required|string|min:1|max:200',
+            'phone' => 'required|string|min:1|max:20',
             'email' => 'required|string|email:rfc,dns',
             'star' => 'required|in:1,2,3,4,5',
-            'description' => 'nullable|string|max:500',
+            'description' => 'nullable|string|max:1000',
             'images.0' => 'required|file|image|max:2048',
             'images.*' => 'nullable|file|image|max:2048',
             'lat' => 'required|numeric',
@@ -99,7 +99,7 @@ class HotelController extends Controller
         }
         $rooms = Room::where('hotel_id', $id)->get();
         foreach($rooms as $room){
-            $room_facilities = Room::where('hotel_id', $room->id)->get();
+            $room_facilities = RoomFacility::where('room_id', $room->id)->get();
             foreach($room_facilities as $room_facility){
                 $room_facility->delete();
             }

@@ -13,7 +13,7 @@ class RoomController extends Controller
 {
     public function create(Request $request, $id){
         $validated = $request->validate([
-            'name' => 'required|string|min:1|max:20|unique:App\Models\Room,name',
+            'name' => 'required|string|min:1|max:50|unique:App\Models\Room,name',
             'price' => 'required|numeric|min:0',
             'count' => 'required|integer|min:1',
             'facilities.*' => 'nullable',
@@ -72,7 +72,7 @@ class RoomController extends Controller
             File::delete($path.$image->filename);
             $image->delete();
         }
-        $room_facilities = RoomFacility::where('facility_id', $id)->get();
+        $room_facilities = RoomFacility::where('room_id', $id)->get();
         foreach($room_facilities as $room_facility){
             $room_facility->delete();
         }
