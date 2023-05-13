@@ -39,6 +39,8 @@ Route::middleware(['throttle:60,1'])->group(function() {
         Route::post('/hotel', [HotelController::class, 'create'])->name('create-hotel');
         Route::put('/hotel/{id}', [HotelController::class, 'edit'])->name('edit-hotel');
         Route::patch('/hotel/{id}', [HotelController::class, 'edit_location'])->name('edit-hotel-location');
+        Route::get('/thumbnail-image-hotel/{id}/{image_id}', [HotelController::class, 'thumbnail_image'])->name('thumbnail-image-hotel');
+        Route::get('/delete-image-hotel/{id}/{image_id}', [HotelController::class, 'delete_image'])->name('delete-image-hotel');
         Route::delete('/hotel/{id}', [HotelController::class, 'delete'])->name('delete-hotel');
         
         Route::post('/room/{id}', [RoomController::class, 'create'])->name('create-room');

@@ -124,6 +124,29 @@ class HotelController extends Controller
         return redirect()->route('index')->with(['toast_primary' => 'Edit hotel successfully.']);
     }
 
+    public function thumbnail_image($id, $image_id){
+        $old_thumbnail = Image::where('hotel_id', $id)->where('type', "Hotel")->where('is_thumbnail', 1)->first();
+        $new_thumbnail = Image::find($image_id);
+        $old_thumbnail->is_thumbnail = 0;
+        $new_thumbnail->is_thumbnail = 1;
+        $old_thumbnail->save();
+        $new_thumbnail->save();
+        return redirect()->route('index')->with(['toast_primary' => 'Set thumbnail of hotel image successfully.', 'thumbnail_image_hotel' => $id]);
+    }
+
+    public function delete_image($id, $image_id){
+        $images = Image::where('hotel_id', $id)->where('type', "Hotel")->get();
+        if(count($images) == 1){
+            return redirect()->route('index')->with(['toast_danger' => 'At least one hotel image.', 'delete_image_hotel' => $id]);
+        }
+        $image = Image::find($image_id);
+        if($image->is_thumbnail == 1){
+            return redirect()->route('index')->with(['toast_danger' => 'Delete thumbnail image is not allowed.', 'delete_image_hotel' => $id]);
+        }
+        $image->delete();
+        return redirect()->route('index')->with(['toast_primary' => 'Delete hotel image successfully.', 'delete_image_hotel' => $id]);
+    }
+
     public function edit_location(Request $request, $id){
         $validated = $request->validate([
             'lat' => 'required|numeric',

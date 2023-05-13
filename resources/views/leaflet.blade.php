@@ -1407,6 +1407,20 @@
             });
         </script>
         @endif
+        @if($thumbnail_image_hotel = Session::get('thumbnail_image_hotel'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("edit_hotel_button_{{$thumbnail_image_hotel}}").click();
+            });
+        </script>
+        @endif
+        @if($delete_image_hotel = Session::get('delete_image_hotel'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("edit_hotel_button_{{$delete_image_hotel}}").click();
+            });
+        </script>
+        @endif
         @if(!empty(old('create_facility')))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
