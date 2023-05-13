@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\Guest;
 use App\Http\Middleware\User;
-use App\Http\Controllers\leafletController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\RoomController;

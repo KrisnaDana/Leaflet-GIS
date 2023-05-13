@@ -207,45 +207,45 @@
                                 <div class="mb-3">
                                     <label class="form-label">Name</label>
                                     @if(old('create_hotel'))
-                                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}"/>
+                                        <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}" required/>
                                         @error('name')
                                         <div class="invalid-feedback">{{$message}}</div>
                                         @enderror
                                     @else
-                                        <input type="text" class="form-control" name="name" value=""/>
+                                        <input type="text" class="form-control" name="name" value="" required/>
                                     @endif
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Address</label>
                                     @if(old('create_hotel'))
-                                        <input type="text" class="form-control @error('address') is-invalid @enderror" name="address" value="{{old('address')}}"/>
+                                        <input type="text" class="form-control @error('address') is-invalid @enderror" name="address" value="{{old('address')}}" required/>
                                         @error('address')
                                         <div class="invalid-feedback">{{$message}}</div>
                                         @enderror
                                     @else
-                                        <input type="text" class="form-control" name="address" value=""/>
+                                        <input type="text" class="form-control" name="address" value="" required/>
                                     @endif
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Phone</label>
                                     @if(old('create_hotel'))
-                                        <input type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{old('phone')}}"/>
+                                        <input type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{old('phone')}}" required/>
                                         @error('phone')
                                         <div class="invalid-feedback">{{$message}}</div>
                                         @enderror
                                     @else
-                                        <input type="text" class="form-control" name="phone" value=""/>
+                                        <input type="text" class="form-control" name="phone" value="" required/>
                                     @endif
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Email</label>
                                     @if(old('create_hotel'))
-                                        <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{old('email')}}"/>
+                                        <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{old('email')}}" required/>
                                         @error('email')
                                         <div class="invalid-feedback">{{$message}}</div>
                                         @enderror
                                     @else
-                                        <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value=""/>
+                                        <input type="email" class="form-control" name="email" value="" required/>
                                     @endif
                                 </div>
                                 <div class="mb-3">
@@ -416,6 +416,170 @@
                                     @endforeach
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="edit_hotel_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <form class="modal-content" method="post" action="{{route('edit-hotel', ['id' => $hotel->id])}}" enctype="multipart/form-data">
+                                @method('put')
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="">
+                                    <ul class="nav nav-underline nav-fill">
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link active">Hotel</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}" id="hotel_room_button_{{$hotel->id}}">Room</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="edit_hotel_image_{{$hotel->id}}" class="carousel slide mb-3" style="width:50%; margin-left: auto; margin-right: auto;">
+                                        <div class="carousel-inner">
+                                            @foreach($images as $image)
+                                                @if($image->type == "Hotel" && $image->hotel_id == $hotel->id)
+                                                    @if($image->is_thumbnail == 1 )
+                                                        <div class="carousel-item active">
+                                                            <img src="{{url('images/hotels/'.$image->filename)}}" class="d-block w-100">
+                                                        </div>
+                                                    @else
+                                                        <div class="carousel-item">
+                                                            <img src="{{url('images/hotels/'.$image->filename)}}" class="d-block w-100">
+                                                        </div>
+                                                    @endif
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#edit_hotel_image_{{$hotel->id}}" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#edit_hotel_image_{{$hotel->id}}" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Name</label>
+                                        @if(old('edit_hotel'))
+                                            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}" required/>
+                                            @error('name')
+                                            <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        @else
+                                            <input type="text" class="form-control" name="name" value="{{$hotel->name}}" required/>
+                                        @endif
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Address</label>
+                                        @if(old('edit_hotel'))
+                                            <input type="text" class="form-control @error('address') is-invalid @enderror" name="address" value="{{old('address')}}" required/>
+                                            @error('address')
+                                            <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        @else
+                                            <input type="text" class="form-control" name="address" value="{{$hotel->address}}" required/>
+                                        @endif
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Phone</label>
+                                        @if(old('edit_hotel'))
+                                            <input type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{old('phone')}}" required/>
+                                            @error('phone')
+                                            <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        @else
+                                            <input type="text" class="form-control" name="phone" value="{{$hotel->phone}}" required/>
+                                        @endif
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email</label>
+                                        @if(old('edit_hotel'))
+                                            <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{old('email')}}" required/>
+                                            @error('email')
+                                            <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        @else
+                                            <input type="email" class="form-control" name="email" value="{{$hotel->email}}" required/>
+                                        @endif
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Star</label>
+                                        <select class="form-select" name="star">
+                                            @if((old('edit_hotel') && old('star') == "1") || $hotel->star == 1)
+                                                <option value="1" selected>1</option>
+                                            @else
+                                                <option value="1">1</option>
+                                            @endif
+                                            @if((old('edit_hotel') && old('star') == "2") || $hotel->star == 2)
+                                                <option value="2" selected>2</option>
+                                            @else
+                                                <option value="2">2</option>
+                                            @endif
+                                            @if((old('edit_hotel') && old('star') == "3") || $hotel->star == 3)
+                                                <option value="3" selected>3</option>
+                                            @else
+                                                <option value="3">3</option>
+                                            @endif
+                                            @if((old('edit_hotel') && old('star') == "4") || $hotel->star == 4)
+                                                <option value="4" selected>4</option>
+                                            @else
+                                                <option value="4">4</option>
+                                            @endif
+                                            @if((old('edit_hotel') && old('star') == "5") || $hotel->star == 5)
+                                                <option value="5" selected>5</option>
+                                            @else
+                                                <option value="5">5</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Description</label>
+                                        @if(old('edit_hotel'))
+                                            <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{old('description')}}</textarea>
+                                            @error('description')
+                                            <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        @else
+                                            <textarea class="form-control" name="description" rows="3">{{$hotel->description}}</textarea>
+                                        @endif
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Images</label>
+                                        @if(old('edit_hotel'))
+                                            <input class="form-control @error('images.*') is-invalid @enderror" type="file" name="images[]" multiple>
+                                            @error('images.0')
+                                            <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        @else
+                                            <input class="form-control" type="file" name="images[]" multiple>
+                                        @endif
+                                    </div>
+                                    <input type="hidden" class="form-control" name="toast_validation" value="Edit hotel failed." required/>
+                                    <input type="hidden" class="form-control" name="edit_hotel" value="{{$hotel->id}}" required/>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">
+                                        <span class="material-symbols-outlined">
+                                            arrow_back
+                                        </span>
+                                    </button>
+                                    <button type="submit" class="btn btn-primary col">
+                                        <span class="material-symbols-outlined">
+                                            done
+                                        </span>
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -1229,10 +1393,17 @@
             });
         </script>
         @endif
-        @if(!empty(old('create_room')))
+        @if(!empty(old('create_hotel')))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById("create_room_button_{{old('create_room')}}").click();
+                document.getElementById("create_hotel_button").click();
+            });
+        </script>
+        @endif
+        @if($edit_hotel = Session::get('edit_hotel'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("edit_hotel_button_{{$edit_hotel}}").click();
             });
         </script>
         @endif

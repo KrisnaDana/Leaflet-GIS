@@ -78,7 +78,50 @@ class HotelController extends Controller
     }
 
     public function edit(Request $request, $id){
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|min:1|max:50',
+            'address' => 'required|string|min:1|max:200',
+            'phone' => 'required|string|min:1|max:20',
+            'email' => 'required|string|email:rfc,dns',
+            'star' => 'required|in:1,2,3,4,5',
+            'description' => 'nullable|string|max:1000',
+            'images.*' => 'nullable|file|image|max:2048',
+        ]);
+        $hotel = Hotel::find($id);
+        $hotel->name = $validated['name'];
+        $hotel->address = $validated['address'];
+        $hotel->phone = $validated['phone'];
+        $hotel->email = $validated['email'];
+        $hotel->star = $validated['star'];
+        if(!empty($validated['description'])){
+            $hotel->description = $validated['description'];
+        }else{
+            $hotel->description = null;
+        }
+        if(!empty($validated['images'])){
+            $image = Image::where('hotel_id', $id)->where('type', "Hotel")->orderBy('id', 'desc')->first();
+            $index = explode(".",$image->filename, -1);
+            $index = array_pop($index);
+            $index = explode("-",$index);
+            $index = array_pop($index);
+            $index = substr($index,10);
+            $index = $index + 1;
+            $filenames = [];
+            for($i=0; $i < count($validated['images']); $i++){
+                $image = $request->file('images')[$i];
+                $filename = Str::slug($validated['name']) . '-' . time() . $index+$i. '.' . $image->getClientOriginalExtension();
+                $path = public_path('/images/hotels');
+                $image->move($path, $filename);
+                array_push($filenames, $filename);
+            }
+            $images = [];
+            foreach($filenames as $filename){
+                array_push($images, ['hotel_id' => $hotel->id, 'type' => 'Hotel', 'is_thumbnail' => 0, 'filename' => $filename, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
+            }
+            Image::insert($images);
+        }
+        $hotel->save();
+        return redirect()->route('index')->with(['toast_primary' => 'Edit hotel successfully.']);
     }
 
     public function edit_location(Request $request, $id){
