@@ -297,11 +297,11 @@
                                     @endif
                                 </div>
                                 @if(old('create_hotel'))
-                                    <input type="text" class="form-control" id="lat" name="lat" hidden value="{{old('lat')}}"/>
-                                    <input type="text" class="form-control" id="lng" name="lng" hidden value="{{old('lng')}}"/>
+                                    <input type="text" class="form-control" id="create_hotel_lat" name="lat" hidden value="{{old('lat')}}"/>
+                                    <input type="text" class="form-control" id="create_hotel_lng" name="lng" hidden value="{{old('lng')}}"/>
                                 @else
-                                    <input type="text" class="form-control" id="lat" name="lat" hidden/>
-                                    <input type="text" class="form-control" id="lng" name="lng" hidden/>
+                                    <input type="text" class="form-control" id="create_hotel_lat" name="lat" hidden/>
+                                    <input type="text" class="form-control" id="create_hotel_lng" name="lng" hidden/>
                                 @endif
                                 <input type="hidden" class="form-control" name="toast_validation" value="Create hotel failed."/>
                                 <input type="hidden" class="form-control" name="create_hotel" value="create_hotel"/>
@@ -421,10 +421,20 @@
                 </div>
 
 
+                <div hidden>
+                    <form method="post" action="{{route('edit-hotel-location', ['id' => $hotel->id])}}">
+                        @method('patch')
+                        <input type="text" class="form-control" id="edit_hotel_location_lat_{{$hotel->id}}" name="lat" value="{{$hotel->lat}}" readonly/>
+                        <input type="text" class="form-control" id="edit_hotel_location_lng_{{$hotel->id}}" name="lng" value="{{$hotel->lng}}" readonly/>
+                        <button type="submit" class="btn btn-primary" id="edit_hotel_location_button_{{$hotel->id}}"></button>
+                    </form>
+                </div>
+
+
                 <div class="modal fade" id="delete_hotel_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
-                            <form method="post" action="{{route('delete-hotel', ['id' => $hotel->id, 'hotel_id' => $hotel->id])}}">
+                            <form method="post" action="{{route('delete-hotel', ['id' => $hotel->id])}}">
                                 @method('delete')
                                 <div class="modal-header">
                                     <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
@@ -1198,7 +1208,6 @@
         </div>
         <!-- <script src="{{url('/js/bootstrap.bundle.min.js')}}"></script> -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-        <script src="{{url('/js/script.js')}}"></script>
         @if(!empty(old('login')) || Session::get('show_login'))
         <script>
             document.addEventListener('DOMContentLoaded', function() {

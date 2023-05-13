@@ -77,12 +77,20 @@ class HotelController extends Controller
         return redirect()->route('index')->with(['toast_primary' => 'Create hotel successfully.']);
     }
 
-    public function edit($id, Request $request){
+    public function edit(Request $request, $id){
         //
     }
 
-    public function edit_location($id, Request $request){
-        //
+    public function edit_location(Request $request, $id){
+        $validated = $request->validate([
+            'lat' => 'required|numeric',
+            'lng' => 'required|numeric',
+        ]);
+        $hotel = Hotel::find($id);
+        $hotel->lat = $validated['lat'];
+        $hotel->lng = $validated['lng'];
+        $hotel->save();
+        return redirect()->route('index')->with(['toast_primary' => 'Edit hotel location successfully.']);
     }
 
     public function delete($id){
