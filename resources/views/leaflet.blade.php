@@ -920,7 +920,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Count</label>
                                         @if(old('create_facility') == $hotel->id)
-                                            <input type="number" class="form-control @error('count') is-invalid @enderror" name="count" value="{{old('count')}}" required/>
+                                            <input type="number" class="form-control @error('count') is-invalid @enderror" name="count" value="{{old('count')}}" placeholder="If uncountable fill with 0" required/>
                                             @error('count')
                                             <div class="invalid-feedback">{{$message}}</div>
                                             @enderror
@@ -992,7 +992,11 @@
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Count</label>
-                                            <input type="text" class="form-control" value="{{$facility->count}}" disabled readonly/>
+                                            @if($facility->count == 0)
+                                                <input type="text" class="form-control" value="-" disabled readonly/>
+                                            @else
+                                                <input type="text" class="form-control" value="{{$facility->count}}" disabled readonly/>
+                                            @endif
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Type</label>
@@ -1010,6 +1014,86 @@
                             </div>
                         </div>
 
+                        <div class="modal fade" id="edit_facility_modal_{{$facility->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <form method="post" action="{{route('edit-facility', ['id' => $facility->id, 'hotel_id' => $hotel->id])}}">
+                                        @method('put')
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-3" id="exampleModalLabel">Facility</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="">
+                                            <ul class="nav nav-underline nav-fill">
+                                                <li class="nav-item">
+                                                    <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">Hotel</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}">Room</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a type="button" class="nav-link active">Facility</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label">Name</label>
+                                                @if(old('edit_facility') == $hotel->id)
+                                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}" required/>
+                                                    @error('name')
+                                                    <div class="invalid-feedback">{{$message}}</div>
+                                                    @enderror
+                                                @else
+                                                    <input type="text" class="form-control" name="name" value="{{$facility->name}}" required/>
+                                                @endif
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Count</label>
+                                                @if(old('edit_facility') == $hotel->id)
+                                                    <input type="number" class="form-control @error('count') is-invalid @enderror" name="count" value="{{old('count')}}" placeholder="If uncountable fill with 0" required/>
+                                                    @error('count')
+                                                    <div class="invalid-feedback">{{$message}}</div>
+                                                    @enderror
+                                                @else
+                                                    <input type="number" class="form-control" name="count" value="{{$facility->count}}" placeholder="If uncountable fill with 0" required/>
+                                                @endif
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Type</label>
+                                                <select class="form-select" name="type">
+                                                    @if(old('edit_facility') == $hotel->id && old('type') == "Hotel")
+                                                        <option value="Hotel" selected>Hotel</option>
+                                                        <option value="Room">Room</option>
+                                                    @elseif((old('edit_facility') == $hotel->id && old('type') == "Room") || $facility->type == "Room")
+                                                        <option value="Hotel">Hotel</option>
+                                                        <option value="Room" selected>Room</option>
+                                                    @else
+                                                        <option value="Hotel" selected>Hotel</option>
+                                                        <option value="Room">Room</option>
+                                                    @endif
+                                                </select>
+                                            </div>
+                                            <input type="hidden" class="form-control" name="toast_validation" value="Edit facility failed." required/>
+                                            <input type="hidden" class="form-control" name="edit_facility" value="{{$facility->id}}" required/>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">
+                                                <span class="material-symbols-outlined">
+                                                    arrow_back
+                                                </span>
+                                            </button>
+                                            <button type="submit" class="btn btn-primary col">
+                                                <span class="material-symbols-outlined">
+                                                    done
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
 
                         <div class="modal fade" id="delete_facility_modal_{{$facility->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
@@ -1022,7 +1106,11 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="mb-3">
-                                                <h5 class="lead">Are you sure want to delete facility: {{$facility->count}} {{$facility->name}}?</h5>
+                                                @if($facility->count == 0)
+                                                    <h5 class="lead">Are you sure want to delete facility: {{$facility->name}}?</h5>
+                                                @else
+                                                    <h5 class="lead">Are you sure want to delete facility: {{$facility->count}} {{$facility->name}}?</h5>
+                                                @endif
                                             </div>
                                         </div>
                                         <div class="modal-footer">
