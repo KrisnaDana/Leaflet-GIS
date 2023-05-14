@@ -358,7 +358,7 @@
                                 </ul>
                             </div>
                             <div class="modal-body">
-                                <div id="hotel_image_{{$hotel->id}}" class="carousel slide mb-3" style="width:50%; margin-left: auto; margin-right: auto;">
+                                <div id="hotel_image_{{$hotel->id}}" class="carousel slide mb-5" style="margin-left: auto; margin-right: auto; max-height:400px; max-width:100%;">
                                     <div class="carousel-inner">
                                         @foreach($images as $image)
                                             @if($image->type == "Hotel" && $image->hotel_id == $hotel->id)
@@ -376,7 +376,7 @@
                                     </div>
                                     <button class="carousel-control-prev" type="button" data-bs-target="#hotel_image_{{$hotel->id}}" data-bs-slide="prev">
                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
+                                        <span class="visually-hidden text-primary">Previous</span>
                                     </button>
                                     <button class="carousel-control-next" type="button" data-bs-target="#hotel_image_{{$hotel->id}}" data-bs-slide="next">
                                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
@@ -443,30 +443,14 @@
                                     </ul>
                                 </div>
                                 <div class="modal-body">
-                                    <div id="edit_hotel_image_{{$hotel->id}}" class="carousel slide mb-3" style="width:50%; margin-left: auto; margin-right: auto;">
-                                        <div class="carousel-inner">
-                                            @foreach($images as $image)
-                                                @if($image->type == "Hotel" && $image->hotel_id == $hotel->id)
-                                                    @if($image->is_thumbnail == 1 )
-                                                        <div class="carousel-item active">
-                                                            <img src="{{url('images/hotels/'.$image->filename)}}" class="d-block w-100">
-                                                        </div>
-                                                    @else
-                                                        <div class="carousel-item">
-                                                            <img src="{{url('images/hotels/'.$image->filename)}}" class="d-block w-100">
-                                                        </div>
-                                                    @endif
+                                    <div class="text-center">
+                                        @foreach($images as $image)
+                                            @if($image->type == "Hotel" && $image->hotel_id == $hotel->id)
+                                                @if($image->is_thumbnail == 1 )
+                                                <img src="{{url('images/hotels/'.$image->filename)}}" style="max-height:400px; max-width:100%;">
                                                 @endif
-                                            @endforeach
-                                        </div>
-                                        <button class="carousel-control-prev" type="button" data-bs-target="#edit_hotel_image_{{$hotel->id}}" data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Previous</span>
-                                        </button>
-                                        <button class="carousel-control-next" type="button" data-bs-target="#edit_hotel_image_{{$hotel->id}}" data-bs-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                            <span class="visually-hidden">Next</span>
-                                        </button>
+                                            @endif
+                                        @endforeach
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Name</label>
@@ -553,7 +537,7 @@
                                             <textarea class="form-control" name="description" rows="3">{{$hotel->description}}</textarea>
                                         @endif
                                     </div>
-                                    <div class="mb-3">
+                                    <div class="mb-4">
                                         <label class="form-label">Images</label>
                                         @if(old('edit_hotel'))
                                             <input class="form-control @error('images.*') is-invalid @enderror" type="file" name="images[]" multiple>
@@ -563,6 +547,19 @@
                                         @else
                                             <input class="form-control" type="file" name="images[]" multiple>
                                         @endif
+                                    </div>
+                                    <div style="display: flex; flex-wrap: wrap;" class="mb-3">
+                                        @foreach($images as $image)
+                                            @if($image->type == "Hotel" && $image->hotel_id == $hotel->id)
+                                                <div class="card mb-2 me-2" style="border: none !important;">
+                                                    <img src="{{url('images/hotels/'.$image->filename)}}" style="max-height:200px; max-width:400px;" class="" alt="{{$image->filename}}">
+                                                    <div class="card-img-overlay">
+                                                        <a href="{{route('thumbnail-image-hotel', ['id' => $hotel->id, 'image_id' => $image->id])}}" type="button" class="btn btn-primary p-1 material-symbols-outlined">account_box</a>
+                                                        <a href="{{route('delete-image-hotel', ['id' => $hotel->id, 'image_id' => $image->id])}}" type="button" class="btn btn-danger p-1 material-symbols-outlined">delete</a>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
                                     </div>
                                     <input type="hidden" class="form-control" name="toast_validation" value="Edit hotel failed." required/>
                                     <input type="hidden" class="form-control" name="edit_hotel" value="{{$hotel->id}}" required/>
@@ -1305,62 +1302,7 @@
                         </div>
                     @endif
                 @endforeach
-
-
             @endforeach
-
-
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editHotelModel" id="updateButtonModal" hidden></button>
-            <div class="modal fade" id="editHotelModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <form>
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Hotel</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="mb-3">
-                                    <label class="form-label">Name</label>
-                                    <input type="text" class="form-control" id="update_hotel_name"/>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Address</label>
-                                    <input type="text" class="form-control" id="update_hotel_address"/>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Phone</label>
-                                    <input type="text" class="form-control" id="update_hotel_phone"/>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Number of Rooms</label>
-                                    <input type="text" class="form-control" id="update_hotel_room"/>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Hotel Star</label>
-                                    <select class="form-select" id="update_hotel_star">
-                                        <option selected>Open this select menu</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Description</label>
-                                    <textarea class="form-control" id="update_hotel_description" rows="5"></textarea>
-                                </div>
-                                <input type="text" class="form-control" id="update_hotel_id" hidden/>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-primary" id="update_hotel_submit">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
             <div id="map" style="height: 892px">
                 <script type="text/javascript">
                     let hotels = <?php echo json_encode($hotels); ?>;

@@ -99,17 +99,10 @@ class HotelController extends Controller
             $hotel->description = null;
         }
         if(!empty($validated['images'])){
-            $image = Image::where('hotel_id', $id)->where('type', "Hotel")->orderBy('id', 'desc')->first();
-            $index = explode(".",$image->filename, -1);
-            $index = array_pop($index);
-            $index = explode("-",$index);
-            $index = array_pop($index);
-            $index = substr($index,10);
-            $index = $index + 1;
             $filenames = [];
             for($i=0; $i < count($validated['images']); $i++){
                 $image = $request->file('images')[$i];
-                $filename = Str::slug($validated['name']) . '-' . time() . $index+$i. '.' . $image->getClientOriginalExtension();
+                $filename = Str::slug($validated['name']) . '-' . time() . $i. '.' . $image->getClientOriginalExtension();
                 $path = public_path('/images/hotels');
                 $image->move($path, $filename);
                 array_push($filenames, $filename);
@@ -121,7 +114,7 @@ class HotelController extends Controller
             Image::insert($images);
         }
         $hotel->save();
-        return redirect()->route('index')->with(['toast_primary' => 'Edit hotel successfully.']);
+        return redirect()->route('index')->with(['toast_primary' => 'Edit hotel successfully.', 'edit_hotel' => $id]);
     }
 
     public function thumbnail_image($id, $image_id){
@@ -135,14 +128,11 @@ class HotelController extends Controller
     }
 
     public function delete_image($id, $image_id){
-        $images = Image::where('hotel_id', $id)->where('type', "Hotel")->get();
-        if(count($images) == 1){
-            return redirect()->route('index')->with(['toast_danger' => 'At least one hotel image.', 'delete_image_hotel' => $id]);
-        }
         $image = Image::find($image_id);
         if($image->is_thumbnail == 1){
             return redirect()->route('index')->with(['toast_danger' => 'Delete thumbnail image is not allowed.', 'delete_image_hotel' => $id]);
         }
+        File::delete(public_path('/images/hotels/').$image->filename);
         $image->delete();
         return redirect()->route('index')->with(['toast_primary' => 'Delete hotel image successfully.', 'delete_image_hotel' => $id]);
     }
