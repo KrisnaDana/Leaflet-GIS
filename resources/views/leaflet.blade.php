@@ -358,17 +358,17 @@
                                 </ul>
                             </div>
                             <div class="modal-body">
-                                <div id="hotel_image_{{$hotel->id}}" class="carousel slide mb-5" style="margin-left: auto; margin-right: auto; max-height:400px; max-width:100%;">
+                                <div id="hotel_image_{{$hotel->id}}" class="carousel slide mb-3">
                                     <div class="carousel-inner">
                                         @foreach($images as $image)
                                             @if($image->type == "Hotel" && $image->hotel_id == $hotel->id)
                                                 @if($image->is_thumbnail == 1 )
                                                     <div class="carousel-item active">
-                                                        <img src="{{url('images/hotels/'.$image->filename)}}" class="d-block w-100">
+                                                        <img src="{{url('images/hotels/'.$image->filename)}}" class="d-block" style="max-height:400px; max-width:100%; margin-left: auto; margin-right: auto;">
                                                     </div>
                                                 @else
                                                     <div class="carousel-item">
-                                                        <img src="{{url('images/hotels/'.$image->filename)}}" class="d-block w-100">
+                                                        <img src="{{url('images/hotels/'.$image->filename)}}" class="d-block" style="max-height:400px; max-width:100%; margin-left: auto; margin-right: auto;">
                                                     </div>
                                                 @endif
                                             @endif
@@ -420,6 +420,7 @@
                     </div>
                 </div>
 
+
                 <div class="modal fade" id="edit_hotel_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
@@ -443,7 +444,7 @@
                                     </ul>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="text-center">
+                                    <div class="text-center mb-3">
                                         @foreach($images as $image)
                                             @if($image->type == "Hotel" && $image->hotel_id == $hotel->id)
                                                 @if($image->is_thumbnail == 1 )
@@ -662,7 +663,7 @@
                                                 <div class="col-md-4">
                                                     @foreach($images as $image)
                                                         @if($image->hotel_id == $hotel->id && $image->room_id == $room->id && $image->type == "Room" && $image->is_thumbnail == "1")
-                                                        <img src="{{url('images/rooms/'.$image->filename)}}" class="img-fluid rounded-start">
+                                                        <img src="{{url('images/rooms/'.$image->filename)}}" class="img-fluid rounded-start h-100">
                                                         @break
                                                         @endif
                                                     @endforeach
@@ -782,7 +783,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Description</label>
-                                        @if(old('create_room'))
+                                        @if(old('create_room') == $hotel->id)
                                             <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{old('description')}}</textarea>
                                             @error('description')
                                             <div class="invalid-feedback">{{$message}}</div>
@@ -806,7 +807,7 @@
                                             }
                                             $exist = false;
                                             foreach($facilities as $facility){
-                                                if($facility->hotel_id == $hotel->id){
+                                                if($facility->hotel_id == $hotel->id && $facility->type == 'Room'){
                                                     $exist = true;
                                                     break;
                                                 }
@@ -816,7 +817,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Images</label>
-                                        @if(old('create_room'))
+                                        @if(old('create_room') == $hotel->id)
                                             <input class="form-control @error('images.*') is-invalid @enderror" type="file" name="images[]" multiple required>
                                             @error('images.0')
                                             <div class="invalid-feedback">{{$message}}</div>
@@ -871,17 +872,17 @@
                                         </ul>
                                     </div>
                                     <div class="modal-body">
-                                        <div id="room_image_{{$room->id}}" class="carousel slide mb-3" style="width:50%; margin-left: auto; margin-right: auto;">
+                                        <div id="room_image_{{$room->id}}" class="carousel slide mb-3">
                                             <div class="carousel-inner">
                                                 @foreach($images as $image)
                                                     @if($image->hotel_id == $hotel->id && $image->room_id == $room->id && $image->type == "Room")
                                                         @if($image->is_thumbnail == 1)
                                                             <div class="carousel-item active">
-                                                                <img src="{{url('images/rooms/'.$image->filename)}}" class="d-block w-100">
+                                                                <img src="{{url('images/rooms/'.$image->filename)}}" class="d-block" style="max-height:400px; max-width:100%; margin-left: auto; margin-right: auto;">
                                                             </div>
                                                         @else
                                                             <div class="carousel-item">
-                                                                <img src="{{url('images/rooms/'.$image->filename)}}" class="d-block w-100">
+                                                                <img src="{{url('images/rooms/'.$image->filename)}}" class="d-block" style="max-height:400px; max-width:100%; margin-left: auto; margin-right: auto;">
                                                             </div>
                                                         @endif
                                                     @endif
@@ -932,6 +933,162 @@
                                             </span>
                                         </button>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="modal fade" id="edit_room_modal_{{$room->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <form class="modal-content" method="post" action="{{route('edit-room', ['id' => $room->id])}}" enctype="multipart/form-data">
+                                        @method('put')
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-3" id="exampleModalLabel">Room</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="">
+                                            <ul class="nav nav-underline nav-fill">
+                                                <li class="nav-item">
+                                                    <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">Hotel</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a type="button" class="nav-link active">Room</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="text-center mb-3">
+                                                @foreach($images as $image)
+                                                    @if($image->type == "Room" && $image->room_id == $room->id)
+                                                        @if($image->is_thumbnail == 1 )
+                                                        <img src="{{url('images/rooms/'.$image->filename)}}" style="max-height:400px; max-width:100%;">
+                                                        @endif
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Name</label>
+                                                @if(old('edit_room') == $room->id)
+                                                    <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}" required/>
+                                                    @error('name')
+                                                    <div class="invalid-feedback">{{$message}}</div>
+                                                    @enderror
+                                                @else
+                                                    <input type="text" class="form-control" name="name" value="{{$hotel->name}}" required/>
+                                                @endif
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Price</label>
+                                                @if(old('edit_room') == $room->id)
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Rp</span>
+                                                        <input type="number" class="form-control @error('price') is-invalid @enderror" name="price" value="{{old('price')}}" required>
+                                                        @error('price')
+                                                        <div class="invalid-feedback">{{$message}}</div>
+                                                        @enderror
+                                                    </div>
+                                                @else
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Rp</span>
+                                                        <input type="number" class="form-control" name="price" value="{{$room->price}}" placeholder="Price per night" required>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Count</label>
+                                                @if(old('edit_room') == $room->id)
+                                                    <input type="number" class="form-control @error('count') is-invalid @enderror" name="count" value="{{old('count')}}" required/>
+                                                    @error('count')
+                                                    <div class="invalid-feedback">{{$message}}</div>
+                                                    @enderror
+                                                @else
+                                                    <input type="number" class="form-control" name="count" value="{{$room->count}}" required/>
+                                                @endif
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Description</label>
+                                                @if(old('edit_room') == $room->id)
+                                                    <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="3">{{old('description')}}</textarea>
+                                                    @error('description')
+                                                    <div class="invalid-feedback">{{$message}}</div>
+                                                    @enderror
+                                                @else
+                                                    <textarea class="form-control" name="description" rows="3">{{$room->description}}</textarea>
+                                                @endif
+                                            </div>
+                                            <div class="mb-3">
+                                                @php
+                                                    $old_facilities = [];
+                                                    if(!empty(old('facilities_counter'))){
+                                                        for($i = 0; $i < old('facilities_counter'); $i++){
+                                                            array_push($old_facilities, old('facilities.'.$i));
+                                                        }
+                                                    }
+                                                    if(old('edit_room')){
+                                                        $old_edit_room = old('edit_room');
+                                                    }else{
+                                                        $old_edit_room = 0;
+                                                    }
+                                                    $exist = false;
+                                                    foreach($facilities as $facility){
+                                                        if($facility->hotel_id == $hotel->id && $facility->type == 'Room'){
+                                                            $exist = true;
+                                                            break;
+                                                        }
+                                                    }
+                                                    $room_facilities_data = [];
+                                                    foreach($room_facilities as $room_facility){
+                                                        if($room_facility->room_id == $room->id){
+                                                            array_push($room_facilities_data, $room_facility->facility_id);
+                                                        }
+                                                    }
+                                                @endphp
+                                                @livewire('room-facility', ['facilities' => $facilities, 'hotel_id' => $hotel->id, 'exist' => $exist, 'old_edit_room' => $old_edit_room, 'crud' => 'edit', 'old_facilities' => $old_facilities, 'old_count' => count($old_facilities), 'facilities_count' => 0, 'room_facilities_data' => $room_facilities_data, 'count_room_facilities_data' => count($room_facilities_data)], key($room->id*-1))
+                                            </div>
+                                            <div class="mb-4">
+                                                <label class="form-label">Images</label>
+                                                @if(old('edit_room') == $room->id)
+                                                    <input class="form-control @error('images.*') is-invalid @enderror" type="file" name="images[]" multiple>
+                                                    @error('images.0')
+                                                    <div class="invalid-feedback">{{$message}}</div>
+                                                    @enderror
+                                                @else
+                                                    <input class="form-control" type="file" name="images[]" multiple>
+                                                @endif
+                                            </div>
+                                            <div style="display: flex; flex-wrap: wrap;" class="mb-3">
+                                                @foreach($images as $image)
+                                                    @if($image->type == "Room" && $image->room_id == $room->id)
+                                                        <div class="card mb-2 me-2" style="border: none !important;">
+                                                            <img src="{{url('images/rooms/'.$image->filename)}}" style="max-height:200px; max-width:400px;" class="" alt="{{$image->filename}}">
+                                                            <div class="card-img-overlay">
+                                                                <a href="{{route('thumbnail-image-room', ['id' => $room->id, 'image_id' => $image->id])}}" type="button" class="btn btn-primary p-1 material-symbols-outlined">account_box</a>
+                                                                <a href="{{route('delete-image-room', ['id' => $room->id, 'image_id' => $image->id])}}" type="button" class="btn btn-danger p-1 material-symbols-outlined">delete</a>
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                            <input type="hidden" class="form-control" name="toast_validation" value="Edit room failed." required/>
+                                            <input type="hidden" class="form-control" name="edit_room" value="{{$room->id}}" required/>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}">
+                                                <span class="material-symbols-outlined">
+                                                    arrow_back
+                                                </span>
+                                            </button>
+                                            <button type="submit" class="btn btn-primary col">
+                                                <span class="material-symbols-outlined">
+                                                    done
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -1185,10 +1342,11 @@
                             </div>
                         </div>
 
+
                         <div class="modal fade" id="edit_facility_modal_{{$facility->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                                 <div class="modal-content">
-                                    <form method="post" action="{{route('edit-facility', ['id' => $facility->id, 'hotel_id' => $hotel->id])}}">
+                                    <form method="post" action="{{route('edit-facility', ['id' => $facility->id])}}">
                                         @method('put')
                                         <div class="modal-header">
                                             <h1 class="modal-title fs-3" id="exampleModalLabel">Facility</h1>
@@ -1210,7 +1368,7 @@
                                         <div class="modal-body">
                                             <div class="mb-3">
                                                 <label class="form-label">Name</label>
-                                                @if(old('edit_facility') == $hotel->id)
+                                                @if(old('edit_facility') == $facility->id)
                                                     <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{old('name')}}" required/>
                                                     @error('name')
                                                     <div class="invalid-feedback">{{$message}}</div>
@@ -1221,7 +1379,7 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label class="form-label">Count</label>
-                                                @if(old('edit_facility') == $hotel->id)
+                                                @if(old('edit_facility') == $facility->id)
                                                     <input type="number" class="form-control @error('count') is-invalid @enderror" name="count" value="{{old('count')}}" placeholder="If uncountable fill with 0" required/>
                                                     @error('count')
                                                     <div class="invalid-feedback">{{$message}}</div>
@@ -1233,10 +1391,10 @@
                                             <div class="mb-3">
                                                 <label class="form-label">Type</label>
                                                 <select class="form-select" name="type">
-                                                    @if(old('edit_facility') == $hotel->id && old('type') == "Hotel")
+                                                    @if(old('edit_facility') == $facility->id && old('type') == "Hotel")
                                                         <option value="Hotel" selected>Hotel</option>
                                                         <option value="Room">Room</option>
-                                                    @elseif((old('edit_facility') == $hotel->id && old('type') == "Room") || $facility->type == "Room")
+                                                    @elseif((old('edit_facility') == $facility->id && old('type') == "Room") || $facility->type == "Room")
                                                         <option value="Hotel">Hotel</option>
                                                         <option value="Room" selected>Room</option>
                                                     @else
@@ -1335,13 +1493,6 @@
             });
         </script>
         @endif
-        @if(!empty(old('create_hotel')))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById("create_hotel_button").click();
-            });
-        </script>
-        @endif
         @if($edit_hotel = Session::get('edit_hotel'))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -1363,10 +1514,10 @@
             });
         </script>
         @endif
-        @if(!empty(old('create_facility')))
+        @if(!empty(old('create_room')))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                document.getElementById("create_facility_button_{{old('create_facility')}}").click();
+                document.getElementById("create_room_button_{{old('create_room')}}").click();
             });
         </script>
         @endif
@@ -1377,10 +1528,31 @@
             });
         </script>
         @endif
+        @if(!empty(old('edit_room')))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("edit_room_button_{{old('edit_room')}}").click();
+            });
+        </script>
+        @endif
         @if($edit_room = Session::get('edit_room'))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById("edit_room_button_{{$edit_room}}").click();
+            });
+        </script>
+        @endif
+        @if($thumbnail_image_room = Session::get('thumbnail_image_room'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("edit_room_button_{{$thumbnail_image_room}}").click();
+            });
+        </script>
+        @endif
+        @if($delete_image_room = Session::get('delete_image_room'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("edit_room_button_{{$delete_image_room}}").click();
             });
         </script>
         @endif
@@ -1391,10 +1563,24 @@
             });
         </script>
         @endif
+        @if(!empty(old('create_facility')))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("create_facility_button_{{old('create_facility')}}").click();
+            });
+        </script>
+        @endif
         @if($create_facility = Session::get('create_facility'))
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById("facility_button_{{$create_facility}}").click();
+            });
+        </script>
+        @endif
+        @if(!empty(old('edit_facility')))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("edit_facility_button_{{old('edit_facility')}}").click();
             });
         </script>
         @endif

@@ -62,7 +62,78 @@ class RoomController extends Controller
     }
 
     public function edit($id, Request $request){
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|min:1|max:50|unique:App\Models\Room,name,'.$id,
+            'price' => 'required|numeric|min:0',
+            'count' => 'required|integer|min:1',
+            'facilities.*' => 'nullable',
+            'description' => 'nullable|string|max:500',
+            'images.*' => 'nullable|file|image|max:2048',
+        ]);
+        $room = Room::find($id);
+        $room->name = $validated['name'];
+        $room->price = $validated['price'];
+        $room->count = $validated['count'];
+        if(!empty($validated['description'])){
+            $room->description = $validated['description'];
+        }else{
+            $room->description = null;
+        }
+        $room_facilities = RoomFacility::where('room_id', $id)->get();
+        if(!empty($validated['facilities'])){
+            if(!empty($room_facilities)){
+                $room_facilities->each->delete();
+            }
+            $room_facilities = [];
+            for($i=0; $i < count($validated['facilities']); $i++){
+                array_push($room_facilities, ['room_id' => $id, 'facility_id' => $validated['facilities'][$i], 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
+            }
+            RoomFacility::insert($room_facilities);
+        }else{
+            if(!empty($room_facilities)){
+                $room_facilities->each->delete();
+            }
+        }
+        if(!empty($validated['images'])){
+            $filenames = [];
+            for($i=0; $i < count($validated['images']); $i++){
+                $image = $request->file('images')[$i];
+                $filename = Str::slug($validated['name']) . '-' . time() . $i. '.' . $image->getClientOriginalExtension();
+                $path = public_path('/images/rooms');
+                $image->move($path, $filename);
+                array_push($filenames, $filename);
+            }
+            $images = [];
+            foreach($filenames as $filename){
+                array_push($images, ['hotel_id' => $room->hotel_id, 'room_id' => $id, 'type' => 'Room', 'is_thumbnail' => 0, 'filename' => $filename, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
+            }
+            Image::insert($images);
+        }
+        $room->save();
+        return redirect()->route('index')->with(['toast_primary' => 'Edit room successfully.', 'edit_room' => $id]);
+    }
+
+    public function thumbnail_image($id, $image_id){
+        $old_thumbnail = Image::where('room_id', $id)->where('type', "Room")->where('is_thumbnail', 1)->first();
+        $new_thumbnail = Image::find($image_id);
+        if($new_thumbnail->is_thumbnail == 1){
+            return redirect()->route('index')->with(['toast_danger' => 'That image is already thumbnail.', 'thumbnail_image_room' => $id]);
+        }
+        $old_thumbnail->is_thumbnail = 0;
+        $new_thumbnail->is_thumbnail = 1;
+        $old_thumbnail->save();
+        $new_thumbnail->save();
+        return redirect()->route('index')->with(['toast_primary' => 'Set thumbnail of room image successfully.', 'thumbnail_image_room' => $id]);
+    }
+
+    public function delete_image($id, $image_id){
+        $image = Image::find($image_id);
+        if($image->is_thumbnail == 1){
+            return redirect()->route('index')->with(['toast_danger' => 'Delete thumbnail image is not allowed.', 'delete_image_room' => $id]);
+        }
+        File::delete(public_path('/images/rooms/').$image->filename);
+        $image->delete();
+        return redirect()->route('index')->with(['toast_primary' => 'Delete room image successfully.', 'delete_image_room' => $id]);
     }
 
     public function delete($id, $hotel_id){

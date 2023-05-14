@@ -25,7 +25,7 @@ class FacilityController extends Controller
         return redirect()->route('index')->with(['toast_primary' => 'Create facility successfully.', 'create_facility' => $id]);
     }
 
-    public function edit(Request $request, $id, $hotel_id){
+    public function edit(Request $request, $id){
         $validated = $request->validate([
             'name' => 'required|string|min:1|max:50',
             'type' => 'required|in:Hotel,Room',
@@ -36,7 +36,7 @@ class FacilityController extends Controller
         $facility->type = $validated['type'];
         $facility->count = $validated['count'];
         $facility->save();
-        return redirect()->route('index')->with(['toast_primary' => 'Edit facility successfully.', 'edit_facility' => $hotel_id]);
+        return redirect()->route('index')->with(['toast_primary' => 'Edit facility successfully.', 'edit_facility' => $id]);
     }
 
     public function delete($id, $hotel_id){

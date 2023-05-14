@@ -11,11 +11,14 @@ class RoomFacility extends Component
     public $hotel_id;
     public $exist;
     public $old_create_room;
+    public $old_edit_room;
     public $crud;
     public $old_facilities;
     public $old_count;
     public $facilities_count;
     public $hotel_now = 0;
+    public $room_facilities_data;
+    public $count_room_facilities_data;
 
     public function increment(){
         $this->count++;

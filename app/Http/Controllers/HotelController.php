@@ -120,6 +120,9 @@ class HotelController extends Controller
     public function thumbnail_image($id, $image_id){
         $old_thumbnail = Image::where('hotel_id', $id)->where('type', "Hotel")->where('is_thumbnail', 1)->first();
         $new_thumbnail = Image::find($image_id);
+        if($new_thumbnail->is_thumbnail == 1){
+            return redirect()->route('index')->with(['toast_danger' => 'That image is already thumbnail.', 'thumbnail_image_hotel' => $id]);
+        }
         $old_thumbnail->is_thumbnail = 0;
         $new_thumbnail->is_thumbnail = 1;
         $old_thumbnail->save();
