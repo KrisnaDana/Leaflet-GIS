@@ -36,6 +36,7 @@ class HotelController extends Controller
             'email' => 'required|string|email:rfc,dns',
             'star' => 'required|in:1,2,3,4,5',
             'description' => 'nullable|string|max:1000',
+            'icon' => 'nullable|file|image|max:1024',
             'images.0' => 'required|file|image|max:2048',
             'images.*' => 'nullable|file|image|max:2048',
             'lat' => 'required|numeric',
@@ -52,6 +53,13 @@ class HotelController extends Controller
         );
         if(!empty($validated['description'])){
             $hotel['description'] = $validated['description'];
+        }
+        if(!empty($validated['icon'])){
+            $image = $request->file('icon');
+            $filename = Str::slug($validated['name']) . '-' . time() . '.' . $image->getClientOriginalExtension();
+            $path = public_path('/images/hotel_icons');
+            $image->move($path, $filename);
+            $hotel['icon'] = 'images/hotel_icons/'.$filename;
         }
         Hotel::create($hotel);
         $hotel = Hotel::where('name', $validated['name'])->where('lat', $validated['lat'])->where('lng', $validated['lng'])->orderBy('id', 'desc')->first();
@@ -85,6 +93,7 @@ class HotelController extends Controller
             'email' => 'required|string|email:rfc,dns',
             'star' => 'required|in:1,2,3,4,5',
             'description' => 'nullable|string|max:1000',
+            'icon' => 'nullable|file|image|max:1024',
             'images.*' => 'nullable|file|image|max:2048',
         ]);
         $hotel = Hotel::find($id);
@@ -97,6 +106,16 @@ class HotelController extends Controller
             $hotel->description = $validated['description'];
         }else{
             $hotel->description = null;
+        }
+        if(!empty($validated['icon'])){
+            if($hotel->icon != "images/hotel.png"){
+                File::delete(public_path('/').$hotel->icon);
+            }
+            $image = $request->file('icon');
+            $filename = Str::slug($validated['name']) . '-' . time() . '.' . $image->getClientOriginalExtension();
+            $path = public_path('/images/hotel_icons');
+            $image->move($path, $filename);
+            $hotel->icon = 'images/hotel_icons/'.$filename;
         }
         if(!empty($validated['images'])){
             $filenames = [];
@@ -177,6 +196,9 @@ class HotelController extends Controller
             $facility->delete();
         }
         $hotel = Hotel::find($id);
+        if($hotel->icon != "images/hotel.png"){
+            File::delete(public_path('/').$hotel->icon);
+        }
         $hotel->delete();
         return redirect()->route('index')->with(['toast_primary' => 'Delete hotel successfully.']);
     }

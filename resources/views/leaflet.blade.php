@@ -21,6 +21,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.1/leaflet.markercluster.js"></script>
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,600,0,0" />
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
         @livewireStyles
         <title>Leaflet Map</title>
     </head>
@@ -196,7 +198,7 @@
 
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create_hotel_modal" id="create_hotel_button" hidden></button>
             <div class="modal fade" id="create_hotel_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
                         <form method="post" action="{{route('create-hotel')}}" enctype="multipart/form-data">
                             <div class="modal-header">
@@ -283,6 +285,17 @@
                                         @enderror
                                     @else
                                         <textarea class="form-control" name="description" rows="3"></textarea>
+                                    @endif
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Icon</label>
+                                    @if(old('create_hotel'))
+                                        <input class="form-control @error('icon') is-invalid @enderror" type="file" name="icon">
+                                        @error('icon')
+                                        <div class="invalid-feedback">{{$message}}</div>
+                                        @enderror
+                                    @else
+                                        <input class="form-control" type="file" type="file" name="icon">
                                     @endif
                                 </div>
                                 <div class="mb-3">
@@ -538,6 +551,17 @@
                                             <textarea class="form-control" name="description" rows="3">{{$hotel->description}}</textarea>
                                         @endif
                                     </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Icon</label>
+                                        @if(old('edit_hotel'))
+                                            <input class="form-control @error('icon') is-invalid @enderror" type="file" name="icon">
+                                            @error('icon')
+                                            <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        @else
+                                            <input class="form-control" type="file" type="file" name="icon">
+                                        @endif
+                                    </div>
                                     <div class="mb-4">
                                         <label class="form-label">Images</label>
                                         @if(old('edit_hotel'))
@@ -582,16 +606,40 @@
                     </div>
                 </div>
 
-
-                <div hidden>
-                    <form method="post" action="{{route('edit-hotel-location', ['id' => $hotel->id])}}">
-                        @method('patch')
-                        <input type="text" class="form-control" id="edit_hotel_location_lat_{{$hotel->id}}" name="lat" value="{{$hotel->lat}}" readonly/>
-                        <input type="text" class="form-control" id="edit_hotel_location_lng_{{$hotel->id}}" name="lng" value="{{$hotel->lng}}" readonly/>
-                        <button type="submit" class="btn btn-primary" id="edit_hotel_location_button_{{$hotel->id}}"></button>
-                    </form>
+                <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#edit_hotel_location_modal_{{$hotel->id}}" id="edit_hotel_location_button_{{$hotel->id}}" hidden></button>
+                <div class="modal fade" id="edit_hotel_location_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <form method="post" action="{{route('edit-hotel-location', ['id' => $hotel->id])}}">
+                                @method('patch')
+                                <input type="text" hidden class="form-control" id="edit_hotel_location_lat_{{$hotel->id}}" name="lat" value="{{$hotel->lat}}" readonly/>
+                                <input type="text" hidden class="form-control" id="edit_hotel_location_lng_{{$hotel->id}}" name="lng" value="{{$hotel->lng}}" readonly/>
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <h5 class="lead">Are you sure want to move hotel location: {{$hotel->name}}?</h5>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary col">
+                                        <span class="material-symbols-outlined">
+                                            done
+                                        </span>
+                                   </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-
+                <script>
+                    $('#edit_hotel_location_modal_{{$hotel->id}}').on('hidden.bs.modal', function () { 
+                        window.location.reload();
+                    });
+                    
+                </script>
 
                 <div class="modal fade" id="delete_hotel_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -1490,6 +1538,13 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById("create_hotel_button").click();
+            });
+        </script>
+        @endif
+        @if(!empty(old('edit_hotel')))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("edit_hotel_button_{{old('edit_hotel')}}").click();
             });
         </script>
         @endif

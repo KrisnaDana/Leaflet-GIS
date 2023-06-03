@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string("phone");
             $table->string("email");
             $table->text("description")->nullable();
+            $table->string("icon")->nullable();
             $table->double("lat");
             $table->double("lng");
             $table->timestamps();

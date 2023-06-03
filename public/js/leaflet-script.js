@@ -1,5 +1,4 @@
 let marker = [];
-
 const map = L.map("map").setView([-8.7945, 115.1769], 14); // [y, x], z)
 const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 18,
@@ -9,24 +8,26 @@ const tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 let markerClusters = L.markerClusterGroup();
 
-const mapIcon = L.icon({
-    iconUrl: "images/hotel.png",
-    iconSize: [50, 50],
-    iconAnchor: [25, 25], // x/2, y-1
-});
-
 hotels.forEach(function (hotel, index) {
     if (user) {
         marker.push(
             new L.Marker([hotel.lat, hotel.lng], {
-                icon: mapIcon,
+                icon: L.icon({
+                    iconUrl: hotel.icon,
+                    iconSize: [50, 50],
+                    iconAnchor: [25, 25], // x/2, y-1
+                }),
                 draggable: true,
             })
         );
     } else {
         marker.push(
             new L.Marker([hotel.lat, hotel.lng], {
-                icon: mapIcon,
+                icon: L.icon({
+                    iconUrl: hotel.icon,
+                    iconSize: [50, 50],
+                    iconAnchor: [25, 25], // x/2, y-1
+                }),
                 draggable: false,
             })
         );
