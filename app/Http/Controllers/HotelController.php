@@ -60,6 +60,8 @@ class HotelController extends Controller
             $path = public_path('/images/hotel_icons');
             $image->move($path, $filename);
             $hotel['icon'] = 'images/hotel_icons/'.$filename;
+        }else{
+            $hotel['icon'] = 'images/hotel.png';
         }
         Hotel::create($hotel);
         $hotel = Hotel::where('name', $validated['name'])->where('lat', $validated['lat'])->where('lng', $validated['lng'])->orderBy('id', 'desc')->first();
