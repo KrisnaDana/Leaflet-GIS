@@ -68,6 +68,9 @@
                         <img src="{{url('images/hotel.png')}}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
                         <span class="text-white">Hotel</span>
                     </a>
+                    <a type="button" class="navbar-brand mt-2" style="text-decoration:none" data-bs-toggle="modal" data-bs-target="#hotel_list">
+                        <h6 class="text-white">Hotel List</h6>
+                    </a>
                     @if(!empty($user))
                     <li class="d-flex nav-item dropdown text-white me-5">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -149,7 +152,7 @@
             @endif
 
 
-
+            @if(empty($user))
             <div class="modal fade" id="login_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content rounded-0">
@@ -227,9 +230,47 @@
                     </div>
                 </div>
             </div>
+            @endif
 
 
+            <div class="modal fade" id="hotel_list" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel List</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        
+                        <div class="modal-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                    <th class="text-center" scope="col-1">No</th>
+                                    <th scope="col-8">Name</th>
+                                    <th scope="col-2" class="text-center">Star</th>
+                                    <th class="text-center" scope="col-1">Option</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($hotels as $hotel)
+                                        <tr>
+                                            <td class="text-center">{{$loop->iteration}}</th>
+                                            <td>{{$hotel->name}}</td>
+                                            <td class="text-center">{{$hotel->star}}</td>
+                                            <td class="text-center">
+                                                <a type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}" onclick="goToMarker('{{$hotel->id}}');">Detail</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+
+            @if(!empty($user))
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create_hotel_modal" id="create_hotel_button" hidden></button>
             <div class="modal fade" id="create_hotel_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -357,20 +398,17 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger col" data-bs-dismiss="modal">
-                                    <span class="material-symbols-outlined">
-                                        close
-                                    </span>
+                                    Cancel
                                 </button>
                                 <button type="submit" class="btn btn-primary col">
-                                    <span class="material-symbols-outlined">
-                                        done
-                                    </span>
+                                    Submit
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
+            @endif
 
 
             @foreach($hotels as $hotel)
@@ -379,18 +417,7 @@
                     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
-                                @if(!empty($user))
-                                <div class="dropdown ms-2">
-                                    <span class="material-symbols-outlined mt-2 text-white" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        arrow_drop_down
-                                    </span>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#edit_hotel_modal_{{$hotel->id}}" id="edit_hotel_button_{{$hotel->id}}">Edit</a></li>
-                                        <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#delete_hotel_modal_{{$hotel->id}}">Delete</a></li>
-                                    </ul>
-                                </div>
-                                @endif
+                                <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="">
@@ -407,17 +434,28 @@
                                 </ul>
                             </div>
                             <div class="modal-body">
+                                @if(!empty($user))
+                                    <div class="btn-group mb-4">
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Option
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#edit_hotel_modal_{{$hotel->id}}" id="edit_hotel_button_{{$hotel->id}}">Edit</a></li>
+                                            <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#delete_hotel_modal_{{$hotel->id}}">Delete</a></li>
+                                        </ul>
+                                    </div>
+                                @endif
                                 <div id="hotel_image_{{$hotel->id}}" class="carousel slide mb-3">
                                     <div class="carousel-inner">
                                         @foreach($images as $image)
                                             @if($image->type == "Hotel" && $image->hotel_id == $hotel->id)
                                                 @if($image->is_thumbnail == 1 )
                                                     <div class="carousel-item active">
-                                                        <img src="{{url('images/hotels/'.$image->filename)}}" class="d-block" style="max-height:400px; max-width:100%; margin-left: auto; margin-right: auto;">
+                                                        <img src="{{url('images/hotels/'.$image->filename)}}" class="d-block" style="max-height:1000px; width:100%; margin-left: auto; margin-right: auto;">
                                                     </div>
                                                 @else
                                                     <div class="carousel-item">
-                                                        <img src="{{url('images/hotels/'.$image->filename)}}" class="d-block" style="max-height:400px; max-width:100%; margin-left: auto; margin-right: auto;">
+                                                        <img src="{{url('images/hotels/'.$image->filename)}}" class="d-block" style="max-height:1000px; width:100%; margin-left: auto; margin-right: auto;">
                                                     </div>
                                                 @endif
                                             @endif
@@ -476,14 +514,14 @@
                     </div>
                 </div>
 
-
+                @if(!empty($user))
                 <div class="modal fade" id="edit_hotel_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
                             <form class="modal-content" method="post" action="{{route('edit-hotel', ['id' => $hotel->id])}}" enctype="multipart/form-data">
                                 @method('put')
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
+                                    <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="">
@@ -504,7 +542,7 @@
                                         @foreach($images as $image)
                                             @if($image->type == "Hotel" && $image->hotel_id == $hotel->id)
                                                 @if($image->is_thumbnail == 1 )
-                                                <img src="{{url('images/hotels/'.$image->filename)}}" style="max-height:400px; max-width:100%;">
+                                                <img src="{{url('images/hotels/'.$image->filename)}}" style="max-height:1000px; width:100%;">
                                                 @endif
                                             @endif
                                         @endforeach
@@ -622,7 +660,7 @@
                                         @foreach($images as $image)
                                             @if($image->type == "Hotel" && $image->hotel_id == $hotel->id)
                                                 <div class="card mb-2 me-2" style="border: none !important;">
-                                                    <img src="{{url('images/hotels/'.$image->filename)}}" style="max-height:200px; max-width:400px;" class="" alt="{{$image->filename}}">
+                                                    <img src="{{url('images/hotels/'.$image->filename)}}" style="height:200px; max-width:400px;" class="" alt="{{$image->filename}}">
                                                     <div class="card-img-overlay">
                                                         <a href="{{route('thumbnail-image-hotel', ['id' => $hotel->id, 'image_id' => $image->id])}}" type="button" class="btn btn-primary p-1 material-symbols-outlined">account_box</a>
                                                         <a href="{{route('delete-image-hotel', ['id' => $hotel->id, 'image_id' => $image->id])}}" type="button" class="btn btn-danger p-1 material-symbols-outlined">delete</a>
@@ -636,14 +674,10 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">
-                                        <span class="material-symbols-outlined">
-                                            arrow_back
-                                        </span>
+                                        Back
                                     </button>
                                     <button type="submit" class="btn btn-primary col">
-                                        <span class="material-symbols-outlined">
-                                            done
-                                        </span>
+                                        Submit
                                     </button>
                                 </div>
                             </form>
@@ -660,7 +694,7 @@
                                 <input type="text" hidden class="form-control" id="edit_hotel_location_lat_{{$hotel->id}}" name="lat" value="{{$hotel->lat}}" readonly/>
                                 <input type="text" hidden class="form-control" id="edit_hotel_location_lng_{{$hotel->id}}" name="lng" value="{{$hotel->lng}}" readonly/>
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
+                                    <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -670,9 +704,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary col">
-                                        <span class="material-symbols-outlined">
-                                            done
-                                        </span>
+                                        Yes
                                    </button>
                                 </div>
                             </form>
@@ -692,7 +724,7 @@
                             <form method="post" action="{{route('delete-hotel', ['id' => $hotel->id])}}">
                                 @method('delete')
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-3" id="exampleModalLabel">Hotel</h1>
+                                    <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -702,37 +734,207 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">
-                                        <span class="material-symbols-outlined">
-                                            arrow_back
-                                        </span>
+                                        Back
                                     </button>
                                     <button type="submit" class="btn btn-primary col">
-                                        <span class="material-symbols-outlined">
-                                            done
-                                        </span>
+                                        Submit
                                    </button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
+                @endif
 
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}" id="room_button_{{$hotel->id}}" hidden></button>
+
+                @if(empty($user))
+
+
+                    <div class="modal fade" id="hotel_room_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="">
+                                    <ul class="nav nav-tabs">
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">Hotel</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link active">Room</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="modal-body">
+                                    @foreach($rooms as $room)
+                                        @if($room->hotel_id == $hotel->id)
+                                            <div class="card mb-3 rounded-0">
+                                                <div class="row g-0">
+                                                    <div class="col-md-4">
+                                                        @foreach($images as $image)
+                                                            @if($image->hotel_id == $hotel->id && $image->room_id == $room->id && $image->type == "Room" && $image->is_thumbnail == "1")
+                                                            <img src="{{url('images/rooms/'.$image->filename)}}" class="img-fluid rounded-0 h-100">
+                                                            @break
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                    <div class="card-body">
+                                                        <div class="d-flex flex-wrap">
+                                                            <a href="" data-bs-toggle="modal" data-bs-target="#read_room_modal_{{$room->id}}" id="read_room_button_{{$room->id}}"><h4 class="card-title">{{$room->name}}</h4></a>
+                                                            @if(!empty($user))
+                                                            <div class="dropdown ms-2">
+                                                                <span class="material-symbols-outlined mt-1 text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    arrow_drop_down
+                                                                </span>
+                                                                <ul class="dropdown-menu">
+                                                                    <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#edit_room_modal_{{$room->id}}" id="edit_room_button_{{$room->id}}">Edit</a></li>
+                                                                    <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#delete_room_modal_{{$room->id}}">Delete</a></li>
+                                                                </ul>
+                                                            </div>
+                                                            @endif
+                                                        </div>
+                                                        
+                                                        @if(!empty($room->description))
+                                                        <p class="card-text mb-0 text-secondary">{{Str::limit($room->description, 500)}}</p>
+                                                        @endif
+                                                        <hr>
+                                                        <div class="row">
+                                                            <div class="col-5">
+                                                                <h5 class="card-title mb-1" style="color:salmon"><strong>Rp{{number_format($room->price , 0, ',', '.')}}</strong><small>/night</small></h5>
+                                                                <small class="badge rounded-pill text-bg-success text-white">{{$room->count}} Rooms Available</small>
+                                                            </div>
+                                                            <div class="col-7">
+                                                                <div class="d-flex flex-wrap">
+                                                                    @foreach($room_facilities as $room_facility)
+                                                                        @if($room_facility->room_id == $room->id)
+                                                                            @if($room_facility->facility->count == 0)
+                                                                                <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">{{$room_facility->facility->name}}</small></p>
+                                                                            @else
+                                                                                <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">{{$room_facility->facility->count." ".$room_facility->facility->name}}</small></p>
+                                                                            @endif
+                                                                        @endif
+                                                                    @endforeach
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @foreach($rooms as $room)
+                        @if($room->hotel_id == $hotel->id)
+
+
+                            <div class="modal fade" id="read_room_modal_{{$room->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="">
+                                            <ul class="nav nav-tabs">
+                                                <li class="nav-item">
+                                                    <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">Hotel</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a type="button" class="nav-link active">Room</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div id="room_image_{{$room->id}}" class="carousel slide mb-3">
+                                                <div class="carousel-inner">
+                                                    @foreach($images as $image)
+                                                        @if($image->hotel_id == $hotel->id && $image->room_id == $room->id && $image->type == "Room")
+                                                            @if($image->is_thumbnail == 1)
+                                                                <div class="carousel-item active">
+                                                                    <img src="{{url('images/rooms/'.$image->filename)}}" class="d-block" style="max-height:1000px; width:100%; margin-left: auto; margin-right: auto;">
+                                                                </div>
+                                                            @else
+                                                                <div class="carousel-item">
+                                                                    <img src="{{url('images/rooms/'.$image->filename)}}" class="d-block" style="max-height:1000px; width:100%; margin-left: auto; margin-right: auto;">
+                                                                </div>
+                                                            @endif
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                                <button class="carousel-control-prev" type="button" data-bs-target="#room_image_{{$room->id}}" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Previous</span>
+                                                </button>
+                                                <button class="carousel-control-next" type="button" data-bs-target="#room_image_{{$room->id}}" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Next</span>
+                                                </button>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Name</label>
+                                                <input type="text" class="form-control" value="{{$room->name}}" disabled readonly/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Price</label>
+                                                <input type="text" class="form-control" value="Rp{{number_format($room->price , 0, ',', '.')}}" disabled readonly/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Count</label>
+                                                <input type="text" class="form-control" value="{{$room->count}}" disabled readonly/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Description</label>
+                                                <textarea class="form-control" rows="3" disabled readonly>{{$room->description}}</textarea>
+                                            </div>
+                                            <div>
+                                                <label class="form-label">Facility</label>
+                                                <br>
+                                                @foreach($room_facilities as $room_facility)
+                                                    @if($room_facility->room_id == $room->id)
+                                                        @if($room_facility->facility->count == 0)
+                                                            <button class="btn btn-light mb-3 text-dark" style="width:initial">{{$room_facility->facility->name}}</button>
+                                                        @else
+                                                            <button class="btn btn-light mb-3 text-dark" style="width:initial">{{$room_facility->facility->count}} {{$room_facility->facility->name}}</button>
+                                                        @endif
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}">
+                                                Back
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                @endif
+
+                @if(!empty($user))
+
+
                 <div class="modal fade" id="hotel_room_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-3" id="exampleModalLabel">Room</h1>
-                                @if(!empty($user))
-                                <div class="dropdown ms-2">
-                                    <span class="material-symbols-outlined mt-2 text-white" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        arrow_drop_down
-                                    </span>
-                                    <ul class="dropdown-menu">
-                                        <li><a type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#create_room_modal_{{$hotel->id}}" id="create_room_button_{{$hotel->id}}">Create</a></li>
-                                    </ul>
-                                </div>
-                                @endif
+                                <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="">
@@ -749,76 +951,59 @@
                                 </ul>
                             </div>
                             <div class="modal-body">
-                                @foreach($rooms as $room)
-                                    @if($room->hotel_id == $hotel->id)
-                                        <div class="card mb-3 rounded-0">
-                                            <div class="row g-0">
-                                                <div class="col-md-4">
-                                                    @foreach($images as $image)
-                                                        @if($image->hotel_id == $hotel->id && $image->room_id == $room->id && $image->type == "Room" && $image->is_thumbnail == "1")
-                                                        <img src="{{url('images/rooms/'.$image->filename)}}" class="img-fluid rounded-0 h-100">
-                                                        @break
-                                                        @endif
-                                                    @endforeach
-                                                </div>
-                                                <div class="col-md-8">
-                                                <div class="card-body">
-                                                    <div class="d-flex flex-wrap">
-                                                        <a href="" data-bs-toggle="modal" data-bs-target="#read_room_modal_{{$room->id}}" id="read_room_button_{{$room->id}}"><h4 class="card-title">{{$room->name}}</h4></a>
-                                                        @if(!empty($user))
+                            <a type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#create_room_modal_{{$hotel->id}}" id="create_room_button_{{$hotel->id}}">Create</a>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                        <th class="text-center" scope="col-1">No</th>
+                                        <th scope="col-8">Name</th>
+                                        <th class="text-center" scope="col-1">Count</th>
+                                        <th scope="col-1" class="text-center">Price</th>
+                                        <th class="text-center" scope="col-1">Option</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $i = 1;
+                                        @endphp
+                                        @foreach($rooms as $room)
+                                            @if($room->hotel_id == $hotel->id)
+                                                <tr>
+                                                    <td class="text-center">{{$i}}</th>
+                                                    <td>{{$room->name}}</td>
+                                                    <td class="text-center">{{$room->count}}</td>
+                                                    <td>Rp{{number_format($room->price , 0, ',', '.')}}</td>
+                                                    <td class="text-center">
                                                         <div class="dropdown ms-2">
                                                             <span class="material-symbols-outlined mt-1 text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                                arrow_drop_down
+                                                                more_vert
                                                             </span>
                                                             <ul class="dropdown-menu">
+                                                                <li><a type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#read_room_modal_{{$room->id}}" id="read_room_button_{{$room->id}}">Detail</a></li>
                                                                 <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#edit_room_modal_{{$room->id}}" id="edit_room_button_{{$room->id}}">Edit</a></li>
                                                                 <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#delete_room_modal_{{$room->id}}">Delete</a></li>
                                                             </ul>
                                                         </div>
-                                                        @endif
-                                                    </div>
-                                                    
-                                                    @if(!empty($room->description))
-                                                    <p class="card-text mb-0 text-secondary">{{Str::limit($room->description, 500)}}</p>
-                                                    @endif
-                                                    <hr>
-                                                    <div class="row">
-                                                        <div class="col-5">
-                                                            <h5 class="card-title mb-1" style="color:salmon"><strong>Rp{{number_format($room->price , 0, ',', '.')}}</strong><small>/night</small></h5>
-                                                            <small class="badge rounded-pill text-bg-success text-white">{{$room->count}} Rooms Available</small>
-                                                        </div>
-                                                        <div class="col-7">
-                                                            <div class="d-flex flex-wrap">
-                                                                @foreach($room_facilities as $room_facility)
-                                                                    @if($room_facility->room_id == $room->id)
-                                                                        @if($room_facility->facility->count == 0)
-                                                                            <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">{{$room_facility->facility->name}}</small></p>
-                                                                        @else
-                                                                            <p class="mb-0 me-2"><span class="material-symbols-outlined text-success">done</span><small class="text-body-secondary" style="vertical-align: top">{{$room_facility->facility->count." ".$room_facility->facility->name}}</small></p>
-                                                                        @endif
-                                                                    @endif
-                                                                @endforeach
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endif
-                                @endforeach
+                                                    </td>
+                                                </tr>
+                                                @php
+                                                    $i++;
+                                                @endphp
+                                            @endif
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
                 </div>
 
-
                 <div class="modal fade" id="create_room_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
-                            <form method="post" action="{{route('create-room', ['id' => $hotel->id])}}" enctype="multipart/form-data">
+                            <form class="modal-content" method="post" action="{{route('create-room', ['id' => $hotel->id])}}" enctype="multipart/form-data">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-3" id="exampleModalLabel">Room</h1>
+                                    <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="">
@@ -926,14 +1111,10 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}">
-                                        <span class="material-symbols-outlined">
-                                            arrow_back
-                                        </span>
+                                        Back
                                     </button>
                                     <button type="submit" class="btn btn-primary col">
-                                        <span class="material-symbols-outlined">
-                                            done
-                                        </span>
+                                        Submit
                                     </button>
                                 </div>
                             </form>
@@ -950,7 +1131,7 @@
                             <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-3" id="exampleModalLabel">Room</h1>
+                                        <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="">
@@ -973,11 +1154,11 @@
                                                     @if($image->hotel_id == $hotel->id && $image->room_id == $room->id && $image->type == "Room")
                                                         @if($image->is_thumbnail == 1)
                                                             <div class="carousel-item active">
-                                                                <img src="{{url('images/rooms/'.$image->filename)}}" class="d-block" style="max-height:400px; max-width:100%; margin-left: auto; margin-right: auto;">
+                                                                <img src="{{url('images/rooms/'.$image->filename)}}" class="d-block" style="max-height:1000px; width:100%; margin-left: auto; margin-right: auto;">
                                                             </div>
                                                         @else
                                                             <div class="carousel-item">
-                                                                <img src="{{url('images/rooms/'.$image->filename)}}" class="d-block" style="max-height:400px; max-width:100%; margin-left: auto; margin-right: auto;">
+                                                                <img src="{{url('images/rooms/'.$image->filename)}}" class="d-block" style="max-height:1000px; width:100%; margin-left: auto; margin-right: auto;">
                                                             </div>
                                                         @endif
                                                     @endif
@@ -1024,9 +1205,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}">
-                                            <span class="material-symbols-outlined">
-                                                arrow_back
-                                            </span>
+                                            Back
                                         </button>
                                     </div>
                                 </div>
@@ -1040,7 +1219,7 @@
                                     <form class="modal-content" method="post" action="{{route('edit-room', ['id' => $room->id])}}" enctype="multipart/form-data">
                                         @method('put')
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-3" id="exampleModalLabel">Room</h1>
+                                            <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="">
@@ -1061,7 +1240,7 @@
                                                 @foreach($images as $image)
                                                     @if($image->type == "Room" && $image->room_id == $room->id)
                                                         @if($image->is_thumbnail == 1 )
-                                                        <img src="{{url('images/rooms/'.$image->filename)}}" style="max-height:400px; max-width:100%;">
+                                                        <img src="{{url('images/rooms/'.$image->filename)}}" style="max-height:1000px; width:100%;">
                                                         @endif
                                                     @endif
                                                 @endforeach
@@ -1162,7 +1341,7 @@
                                                 @foreach($images as $image)
                                                     @if($image->type == "Room" && $image->room_id == $room->id)
                                                         <div class="card mb-2 me-2" style="border: none !important;">
-                                                            <img src="{{url('images/rooms/'.$image->filename)}}" style="max-height:200px; max-width:400px;" class="" alt="{{$image->filename}}">
+                                                            <img src="{{url('images/rooms/'.$image->filename)}}" style="height:200px; max-width:400px;" class="" alt="{{$image->filename}}">
                                                             <div class="card-img-overlay">
                                                                 <a href="{{route('thumbnail-image-room', ['id' => $room->id, 'image_id' => $image->id])}}" type="button" class="btn btn-primary p-1 material-symbols-outlined">account_box</a>
                                                                 <a href="{{route('delete-image-room', ['id' => $room->id, 'image_id' => $image->id])}}" type="button" class="btn btn-danger p-1 material-symbols-outlined">delete</a>
@@ -1176,14 +1355,10 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}">
-                                                <span class="material-symbols-outlined">
-                                                    arrow_back
-                                                </span>
+                                                Back
                                             </button>
                                             <button type="submit" class="btn btn-primary col">
-                                                <span class="material-symbols-outlined">
-                                                    done
-                                                </span>
+                                                Submit
                                             </button>
                                         </div>
                                     </form>
@@ -1198,7 +1373,7 @@
                                     <form method="post" action="{{route('delete-room', ['id' => $room->id, 'hotel_id' => $hotel->id])}}">
                                         @method('delete')
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-3" id="exampleModalLabel">Room</h1>
+                                            <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
@@ -1208,14 +1383,10 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}">
-                                                <span class="material-symbols-outlined">
-                                                    arrow_back
-                                                </span>
+                                                Back
                                             </button>
                                             <button type="submit" class="btn btn-primary col">
-                                                <span class="material-symbols-outlined">
-                                                    done
-                                                </span>
+                                                Submit
                                             </button>
                                         </div>
                                     </form>
@@ -1224,23 +1395,18 @@
                         </div>
                     @endif
                 @endforeach
+                @endif
 
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}" id="facility_button_{{$hotel->id}}" hidden></button>
+
+                @if(!empty($user))
+
+
                 <div class="modal fade" id="hotel_facility_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-3" id="exampleModalLabel">Facility</h1>
-                                @if(!empty($user))
-                                <div class="dropdown ms-2">
-                                    <span class="material-symbols-outlined mt-2 text-white" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        arrow_drop_down
-                                    </span>
-                                    <ul class="dropdown-menu">
-                                        <li><a type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#create_facility_modal_{{$hotel->id}}" id="create_facility_button_{{$hotel->id}}">Create</a></li>
-                                    </ul>
-                                </div>
-                                @endif
+                                <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="">
@@ -1256,7 +1422,9 @@
                                     </li>
                                 </ul>
                             </div>
+                            
                             <div class="modal-body">
+                                <a type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#create_facility_modal_{{$hotel->id}}" id="create_facility_button_{{$hotel->id}}">Create</a>
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -1313,9 +1481,9 @@
                 <div class="modal fade" id="create_facility_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                         <div class="modal-content">
-                            <form method="post" action="{{route('create-facility', ['id' => $hotel->id])}}">
+                            <form method="post" action="{{route('create-facility', ['id' => $hotel->id])}}" enctype="multipart/form-data">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-3" id="exampleModalLabel">Facility</h1>
+                                    <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="">
@@ -1368,19 +1536,26 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Images</label>
+                                        @if(old('create_facility') == $hotel->id)
+                                            <input class="form-control @error('images.*') is-invalid @enderror" type="file" name="images[]" multiple>
+                                            @error('images.0')
+                                            <div class="invalid-feedback">{{$message}}</div>
+                                            @enderror
+                                        @else
+                                            <input class="form-control" type="file" name="images[]" multiple>
+                                        @endif
+                                    </div>
                                     <input type="hidden" class="form-control" name="toast_validation" value="Create facility failed." required/>
                                     <input type="hidden" class="form-control" name="create_facility" value="{{$hotel->id}}" required/>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">
-                                        <span class="material-symbols-outlined">
-                                            arrow_back
-                                        </span>
+                                        Back
                                     </button>
                                     <button type="submit" class="btn btn-primary col">
-                                        <span class="material-symbols-outlined">
-                                            done
-                                        </span>
+                                        Submit
                                     </button>
                                 </div>
                             </form>
@@ -1397,7 +1572,7 @@
                             <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-3" id="exampleModalLabel">Facility</h1>
+                                        <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="">
@@ -1414,6 +1589,44 @@
                                         </ul>
                                     </div>
                                     <div class="modal-body">
+                                        @php
+                                            $facility_images_check = 0;
+                                        @endphp
+                                        @foreach($images as $image)
+                                            @if($image->hotel_id == $hotel->id && $image->facility_id == $facility->id && $image->type == "Facility")
+                                                @php
+                                                    $facility_images_check = 1;
+                                                    break;
+                                                @endphp
+                                            @endif
+                                        @endforeach
+                                        @if($facility_images_check == 1)
+                                        <div id="facility_image_{{$facility->id}}" class="carousel slide mb-3">
+                                            <div class="carousel-inner">
+                                                @foreach($images as $image)
+                                                    @if($image->hotel_id == $hotel->id && $image->facility_id == $facility->id && $image->type == "Facility")
+                                                        @if($image->is_thumbnail == 1)
+                                                            <div class="carousel-item active">
+                                                                <img src="{{url('images/facilities/'.$image->filename)}}" class="d-block" style="max-height:1000px; width:100%; margin-left: auto; margin-right: auto;">
+                                                            </div>
+                                                        @else
+                                                            <div class="carousel-item">
+                                                                <img src="{{url('images/facilities/'.$image->filename)}}" class="d-block" style="max-height:1000px; width:100%; margin-left: auto; margin-right: auto;">
+                                                            </div>
+                                                        @endif
+                                                    @endif
+                                                @endforeach
+                                            </div>
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#facility_image_{{$facility->id}}" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Previous</span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button" data-bs-target="#facility_image_{{$facility->id}}" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Next</span>
+                                            </button>
+                                        </div>
+                                        @endif
                                         <div class="mb-3">
                                             <label class="form-label">Name</span></label>
                                             <input type="text" class="form-control" value="{{$facility->name}}" disabled readonly/>
@@ -1435,9 +1648,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">
-                                            <span class="material-symbols-outlined">
-                                                arrow_back
-                                            </span>
+                                            Back
                                         </button>
                                     </div>
                                 </div>
@@ -1448,10 +1659,10 @@
                         <div class="modal fade" id="edit_facility_modal_{{$facility->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
                                 <div class="modal-content">
-                                    <form method="post" action="{{route('edit-facility', ['id' => $facility->id])}}">
+                                    <form class="modal-content" method="post" action="{{route('edit-facility', ['id' => $facility->id])}}" enctype="multipart/form-data">
                                         @method('put')
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-3" id="exampleModalLabel">Facility</h1>
+                                            <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="">
@@ -1468,6 +1679,15 @@
                                             </ul>
                                         </div>
                                         <div class="modal-body">
+                                            @foreach($images as $image)
+                                                @if($image->type == "Facility" && $image->facility_id == $facility->id)
+                                                    @if($image->is_thumbnail == 1 )
+                                                        <div class="text-center mb-3">
+                                                            <img src="{{url('images/facilities/'.$image->filename)}}" style="max-height:1000px; width:100%;">
+                                                        </div>
+                                                    @endif
+                                                @endif
+                                            @endforeach
                                             <div class="mb-3">
                                                 <label class="form-label">Name<span class="required-form"> *</span></label>
                                                 @if(old('edit_facility') == $facility->id)
@@ -1507,19 +1727,39 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Images</label>
+                                                @if(old('edit_facility') == $hotel->id)
+                                                    <input class="form-control @error('images.*') is-invalid @enderror" type="file" name="images[]" multiple>
+                                                    @error('images.0')
+                                                    <div class="invalid-feedback">{{$message}}</div>
+                                                    @enderror
+                                                @else
+                                                    <input class="form-control" type="file" name="images[]" multiple>
+                                                @endif
+                                            </div>
+                                            <div style="display: flex; flex-wrap: wrap;" class="mb-3">
+                                                @foreach($images as $image)
+                                                    @if($image->type == "Facility" && $image->facility_id == $facility->id)
+                                                        <div class="card mb-2 me-2" style="border: none !important;">
+                                                            <img src="{{url('images/facilities/'.$image->filename)}}" style="height:200px; max-width:400px;" class="" alt="{{$image->filename}}">
+                                                            <div class="card-img-overlay">
+                                                                <a href="{{route('thumbnail-image-facility', ['id' => $facility->id, 'image_id' => $image->id])}}" type="button" class="btn btn-primary p-1 material-symbols-outlined">account_box</a>
+                                                                <a href="{{route('delete-image-facility', ['id' => $facility->id, 'image_id' => $image->id])}}" type="button" class="btn btn-danger p-1 material-symbols-outlined">delete</a>
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+                                            </div>
                                             <input type="hidden" class="form-control" name="toast_validation" value="Edit facility failed." required/>
                                             <input type="hidden" class="form-control" name="edit_facility" value="{{$facility->id}}" required/>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">
-                                                <span class="material-symbols-outlined">
-                                                    arrow_back
-                                                </span>
+                                                Back
                                             </button>
                                             <button type="submit" class="btn btn-primary col">
-                                                <span class="material-symbols-outlined">
-                                                    done
-                                                </span>
+                                                Submit
                                             </button>
                                         </div>
                                     </form>
@@ -1534,7 +1774,7 @@
                                     <form method="post" action="{{route('delete-facility', ['id' => $facility->id, 'hotel_id' => $hotel->id])}}">
                                         @method('delete')
                                         <div class="modal-header">
-                                            <h1 class="modal-title fs-3" id="exampleModalLabel">Facility</h1>
+                                            <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
@@ -1548,14 +1788,10 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-danger col" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">
-                                                <span class="material-symbols-outlined">
-                                                    arrow_back
-                                                </span>
+                                                Back
                                             </button>
                                             <button type="submit" class="btn btn-primary col">
-                                                <span class="material-symbols-outlined">
-                                                    done
-                                                </span>
+                                                Submit
                                             </button>
                                         </div>
                                     </form>
@@ -1564,8 +1800,11 @@
                         </div>
                     @endif
                 @endforeach
+                @endif
+
+
             @endforeach
-            <div id="map" style="height: 892px">
+            <div id="map" style="height: 886px">
                 <script type="text/javascript">
                     let hotels = <?php echo json_encode($hotels); ?>;
                     let api_url = <?php echo json_encode(route('api_url')); ?>;
@@ -1699,6 +1938,20 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById("edit_facility_button_{{$edit_facility}}").click();
+            });
+        </script>
+        @endif
+        @if($thumbnail_image_facility = Session::get('thumbnail_image_facility'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("edit_facility_button_{{$thumbnail_image_facility}}").click();
+            });
+        </script>
+        @endif
+        @if($delete_image_facility = Session::get('delete_image_facility'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.getElementById("edit_facility_button_{{$delete_image_facility}}").click();
             });
         </script>
         @endif

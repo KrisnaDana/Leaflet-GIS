@@ -37,6 +37,10 @@ hotels.forEach(function (hotel, index) {
 
 map.addLayer(markerClusters);
 
+function clickZoom(e) {
+    map.setView(e.target.getLatLng(), 16);
+}
+
 map.on("click", function (e) {
     if (user) {
         document.getElementById("create_hotel_button").click();
@@ -47,6 +51,7 @@ map.on("click", function (e) {
 
 marker.forEach(function (m, index) {
     m.on("click", function (e) {
+        map.setView(e.target.getLatLng(), 16);
         document.getElementById(`hotel_button_${hotels[index].id}`).click();
     });
     if (user) {
@@ -65,3 +70,11 @@ marker.forEach(function (m, index) {
         });
     }
 });
+
+function goToMarker(id) {
+    hotels.forEach(function (hotel, index) {
+        if (hotel.id == id) {
+            map.setView([hotel.lat, hotel.lng], 16);
+        }
+    });
+}

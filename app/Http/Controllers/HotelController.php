@@ -177,9 +177,12 @@ class HotelController extends Controller
         $images = Image::where('hotel_id', $id)->get();
         $hotel_path = public_path('/images/hotels/');
         $room_path = public_path('/images/rooms/');
+        $facility_path = public_path('/images/facilities/');
         foreach($images as $image){
             if($image->room_id != 0){
                 File::delete($room_path.$image->filename);
+            }elseif($image->facility_id != 0){
+                File::delete($facility_path.$image->filename);
             }else{
                 File::delete($hotel_path.$image->filename);
             }

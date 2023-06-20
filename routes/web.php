@@ -51,6 +51,8 @@ Route::middleware(['throttle:60,1'])->group(function() {
         
         Route::post('/facility/{id}', [FacilityController::class, 'create'])->name('create-facility');
         Route::put('/facility/{id}', [FacilityController::class, 'edit'])->name('edit-facility');
+        Route::get('/thumbnail-image-facility/{id}/{image_id}', [FacilityController::class, 'thumbnail_image'])->name('thumbnail-image-facility');
+        Route::get('/delete-image-facility/{id}/{image_id}', [FacilityController::class, 'delete_image'])->name('delete-image-facility');
         Route::delete('/facility/{id}/{hotel_id}', [FacilityController::class, 'delete'])->name('delete-facility');
     });
 });
