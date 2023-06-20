@@ -64,13 +64,13 @@
         <div>
             <nav class="navbar" style="background-color:#2C3345">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="{{route('index')}}">
+                    <a class="navbar-brand" data-bs-toggle="modal" data-bs-target="#hotel_list" type="button">
                         <img src="{{url('images/hotel.png')}}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-                        <span class="text-white">Hotel</span>
+                        <span class="text-white dropdown-toggle">Hotel</span>
                     </a>
-                    <a type="button" class="navbar-brand mt-2" style="text-decoration:none" data-bs-toggle="modal" data-bs-target="#hotel_list">
-                        <h6 class="text-white">Hotel List</h6>
-                    </a>
+                    <!-- <a type="button" class="navbar-brand mt-2 text-start" style="text-decoration:none" data-bs-toggle="modal" data-bs-target="#hotel_list">
+                        <h6 class="text-white nav-link dropdown-toggle">Hotel List </h6>
+                    </a> -->
                     @if(!empty($user))
                     <li class="d-flex nav-item dropdown text-white me-5">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -428,9 +428,11 @@
                                     <li class="nav-item">
                                         <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}" id="hotel_room_button_{{$hotel->id}}">Room</a>
                                     </li>
+                                    @if(!empty($user))
                                     <li class="nav-item">
                                         <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
                                     </li>
+                                    @endif
                                 </ul>
                             </div>
                             <div class="modal-body">
@@ -498,16 +500,67 @@
                                 </div>
                                 <div>
                                     <label class="form-label">Facility</label>
-                                    <br>
+                                    <div style="display: flex; flex-wrap: wrap;">
                                     @foreach($facilities as $facility)
                                         @if($facility->hotel_id == $hotel->id && $facility->type == "Hotel")
-                                            @if($facility->count == 0)
-                                                <button class="btn btn-light mb-3 text-dark" style="width:initial">{{$facility->name}}</button>
-                                            @else
-                                                <button class="btn btn-light mb-3 text-dark" style="width:initial">{{$facility->count}} {{$facility->name}}</button>
-                                            @endif
+                                            <div class="card me-3 mb-3 rounded-0" style="width:230px">
+                                                <div class="">
+                                                    <div class="card-img-top">
+                                                        @php
+                                                            $facility_images_check = 0;
+                                                        @endphp
+                                                        @foreach($images as $image)
+                                                            @if($image->hotel_id == $hotel->id && $image->facility_id == $facility->id && $image->type == "Facility")
+                                                                @php
+                                                                    $facility_images_check = 1;
+                                                                    break;
+                                                                @endphp
+                                                            @endif
+                                                        @endforeach
+                                                        @if($facility_images_check == 1)
+                                                            <div id="hotel_facility_image_{{$facility->id}}" class="carousel slide">
+                                                                <div class="carousel-inner">
+                                                                    @foreach($images as $image)
+                                                                        @if($image->hotel_id == $hotel->id && $image->facility_id == $facility->id && $image->type == "Facility")
+                                                                            @if($image->is_thumbnail == 1)
+                                                                                <div class="carousel-item active">
+                                                                                    <img src="{{url('images/facilities/'.$image->filename)}}" class="d-block" style="max-height:225px; width:100%; margin-left: auto; margin-right: auto;">
+                                                                                </div>
+                                                                            @else
+                                                                                <div class="carousel-item">
+                                                                                    <img src="{{url('images/facilities/'.$image->filename)}}" class="d-block" style="max-height:225px; width:100%; margin-left: auto; margin-right: auto;">
+                                                                                </div>
+                                                                            @endif
+                                                                        @endif
+                                                                    @endforeach
+                                                                </div>
+                                                                <button class="carousel-control-prev" type="button" data-bs-target="#hotel_facility_image_{{$facility->id}}" data-bs-slide="prev">
+                                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                                    <span class="visually-hidden">Previous</span>
+                                                                </button>
+                                                                <button class="carousel-control-next" type="button" data-bs-target="#hotel_facility_image_{{$facility->id}}" data-bs-slide="next">
+                                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                                    <span class="visually-hidden">Next</span>
+                                                                </button>
+                                                            </div>
+                                                        @else
+                                                            <img src="{{url('images/no_image.jpg')}}" style="max-height:225px; width:100%; margin-left: auto; margin-right: auto;">
+                                                        @endif
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <p class="card-text">
+                                                            @if($facility->count == 0)
+                                                                {{$facility->name}}
+                                                            @else
+                                                                {{$facility->count}} {{$facility->name}}
+                                                            @endif
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endif
                                     @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -766,9 +819,6 @@
                                         <li class="nav-item">
                                             <a type="button" class="nav-link active">Room</a>
                                         </li>
-                                        <li class="nav-item">
-                                            <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
-                                        </li>
                                     </ul>
                                 </div>
                                 <div class="modal-body">
@@ -854,9 +904,6 @@
                                                 <li class="nav-item">
                                                     <a type="button" class="nav-link active">Room</a>
                                                 </li>
-                                                <li class="nav-item">
-                                                    <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
-                                                </li>
                                             </ul>
                                         </div>
                                         <div class="modal-body">
@@ -903,16 +950,67 @@
                                             </div>
                                             <div>
                                                 <label class="form-label">Facility</label>
-                                                <br>
+                                                <div style="display: flex; flex-wrap: wrap;">
                                                 @foreach($room_facilities as $room_facility)
                                                     @if($room_facility->room_id == $room->id)
-                                                        @if($room_facility->facility->count == 0)
-                                                            <button class="btn btn-light mb-3 text-dark" style="width:initial">{{$room_facility->facility->name}}</button>
-                                                        @else
-                                                            <button class="btn btn-light mb-3 text-dark" style="width:initial">{{$room_facility->facility->count}} {{$room_facility->facility->name}}</button>
-                                                        @endif
+                                                        <div class="card me-3 mb-3 rounded-0" style="width:230px">
+                                                            <div class="">
+                                                                <div class="card-img-top">
+                                                                    @php
+                                                                        $facility_images_check = 0;
+                                                                    @endphp
+                                                                    @foreach($images as $image)
+                                                                        @if($image->hotel_id == $hotel->id && $image->facility_id == $room_facility->facility_id && $image->type == "Facility")
+                                                                            @php
+                                                                                $facility_images_check = 1;
+                                                                                break;
+                                                                            @endphp
+                                                                        @endif
+                                                                    @endforeach
+                                                                    @if($facility_images_check == 1)
+                                                                        <div id="room_facility_image_{{$room->id}}_{{$room_facility->facility_id}}" class="carousel slide">
+                                                                            <div class="carousel-inner">
+                                                                                @foreach($images as $image)
+                                                                                    @if($image->hotel_id == $hotel->id && $image->facility_id == $room_facility->facility_id && $image->type == "Facility")
+                                                                                        @if($image->is_thumbnail == 1)
+                                                                                            <div class="carousel-item active">
+                                                                                                <img src="{{url('images/facilities/'.$image->filename)}}" class="d-block" style="max-height:225px; width:100%; margin-left: auto; margin-right: auto;">
+                                                                                            </div>
+                                                                                        @else
+                                                                                            <div class="carousel-item">
+                                                                                                <img src="{{url('images/facilities/'.$image->filename)}}" class="d-block" style="max-height:225px; width:100%; margin-left: auto; margin-right: auto;">
+                                                                                            </div>
+                                                                                        @endif
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            </div>
+                                                                            <button class="carousel-control-prev" type="button" data-bs-target="#room_facility_image_{{$room->id}}_{{$room_facility->facility_id}}" data-bs-slide="prev">
+                                                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                                                <span class="visually-hidden">Previous</span>
+                                                                            </button>
+                                                                            <button class="carousel-control-next" type="button" data-bs-target="#room_facility_image_{{$room->id}}_{{$room_facility->facility_id}}" data-bs-slide="next">
+                                                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                                                <span class="visually-hidden">Next</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    @else
+                                                                        <img src="{{url('images/no_image.jpg')}}" style="max-height:225px; width:100%; margin-left: auto; margin-right: auto;">
+                                                                    @endif
+                                                                </div>
+                                                                <div class="card-body">
+                                                                    <p class="card-text">
+                                                                        @if($room_facility->facility->count == 0)
+                                                                            {{$room_facility->facility->name}}
+                                                                        @else
+                                                                            {{$room_facility->facility->count}} {{$room_facility->facility->name}}
+                                                                        @endif
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     @endif
                                                 @endforeach
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -1191,16 +1289,67 @@
                                         </div>
                                         <div>
                                             <label class="form-label">Facility</label>
-                                            <br>
+                                            <div style="display: flex; flex-wrap: wrap;">
                                             @foreach($room_facilities as $room_facility)
                                                 @if($room_facility->room_id == $room->id)
-                                                    @if($room_facility->facility->count == 0)
-                                                        <button class="btn btn-light mb-3 text-dark" style="width:initial">{{$room_facility->facility->name}}</button>
-                                                    @else
-                                                        <button class="btn btn-light mb-3 text-dark" style="width:initial">{{$room_facility->facility->count}} {{$room_facility->facility->name}}</button>
-                                                    @endif
+                                                    <div class="card me-3 mb-3 rounded-0" style="width:230px">
+                                                        <div class="">
+                                                            <div class="card-img-top">
+                                                                @php
+                                                                    $facility_images_check = 0;
+                                                                @endphp
+                                                                @foreach($images as $image)
+                                                                    @if($image->hotel_id == $hotel->id && $image->facility_id == $room_facility->facility_id && $image->type == "Facility")
+                                                                        @php
+                                                                            $facility_images_check = 1;
+                                                                            break;
+                                                                        @endphp
+                                                                    @endif
+                                                                @endforeach
+                                                                @if($facility_images_check == 1)
+                                                                    <div id="room_facility_image_{{$room->id}}_{{$room_facility->facility_id}}" class="carousel slide">
+                                                                        <div class="carousel-inner">
+                                                                            @foreach($images as $image)
+                                                                                @if($image->hotel_id == $hotel->id && $image->facility_id == $room_facility->facility_id && $image->type == "Facility")
+                                                                                    @if($image->is_thumbnail == 1)
+                                                                                        <div class="carousel-item active">
+                                                                                            <img src="{{url('images/facilities/'.$image->filename)}}" class="d-block" style="max-height:225px; width:100%; margin-left: auto; margin-right: auto;">
+                                                                                        </div>
+                                                                                    @else
+                                                                                        <div class="carousel-item">
+                                                                                            <img src="{{url('images/facilities/'.$image->filename)}}" class="d-block" style="max-height:225px; width:100%; margin-left: auto; margin-right: auto;">
+                                                                                        </div>
+                                                                                    @endif
+                                                                                @endif
+                                                                            @endforeach
+                                                                        </div>
+                                                                        <button class="carousel-control-prev" type="button" data-bs-target="#room_facility_image_{{$room->id}}_{{$room_facility->facility_id}}" data-bs-slide="prev">
+                                                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                                            <span class="visually-hidden">Previous</span>
+                                                                        </button>
+                                                                        <button class="carousel-control-next" type="button" data-bs-target="#room_facility_image_{{$room->id}}_{{$room_facility->facility_id}}" data-bs-slide="next">
+                                                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                                            <span class="visually-hidden">Next</span>
+                                                                        </button>
+                                                                    </div>
+                                                                @else
+                                                                    <img src="{{url('images/no_image.jpg')}}" style="max-height:225px; width:100%; margin-left: auto; margin-right: auto;">
+                                                                @endif
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <p class="card-text">
+                                                                    @if($room_facility->facility->count == 0)
+                                                                        {{$room_facility->facility->name}}
+                                                                    @else
+                                                                        {{$room_facility->facility->count}} {{$room_facility->facility->name}}
+                                                                    @endif
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 @endif
                                             @endforeach
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">

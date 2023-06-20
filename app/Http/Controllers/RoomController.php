@@ -16,7 +16,7 @@ class RoomController extends Controller
             'name' => 'required|string|min:1|max:50|unique:App\Models\Room,name',
             'price' => 'required|numeric|min:0',
             'count' => 'required|integer|min:1',
-            'facilities.*' => 'nullable',
+            'facilities.*' => 'nullable|distinct',
             'description' => 'nullable|string|max:500',
             'images.0' => 'required|file|image|max:2048',
             'images.*' => 'nullable|file|image|max:2048',
@@ -66,7 +66,7 @@ class RoomController extends Controller
             'name' => 'required|string|min:1|max:50|unique:App\Models\Room,name,'.$id,
             'price' => 'required|numeric|min:0',
             'count' => 'required|integer|min:1',
-            'facilities.*' => 'nullable',
+            'facilities.*' => 'nullable|distinct',
             'description' => 'nullable|string|max:500',
             'images.*' => 'nullable|file|image|max:2048',
         ]);
