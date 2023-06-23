@@ -73,7 +73,7 @@ class FacilityController extends Controller
             }
             $images = [];
             $facility_images = Image::where('facility_id', $facility->id)->get();
-            if(!empty($facility_images)){
+            if(count($facility_images)>0){
                 foreach($filenames as $filename){
                     array_push($images, ['hotel_id' => $facility->hotel_id, 'facility_id' => $facility->id, 'type' => 'Facility', 'is_thumbnail' => 0, 'filename' => $filename, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s')]);
                 }
