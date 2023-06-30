@@ -13,7 +13,7 @@ class RoomController extends Controller
 {
     public function create(Request $request, $id){
         $validated = $request->validate([
-            'name' => 'required|string|min:1|max:50|unique:App\Models\Room,name',
+            'name' => 'required|string|min:1|max:50',
             'price' => 'required|numeric|min:0',
             'count' => 'required|integer|min:1',
             'facilities.*' => 'nullable|distinct',
@@ -63,7 +63,7 @@ class RoomController extends Controller
 
     public function edit($id, Request $request){
         $validated = $request->validate([
-            'name' => 'required|string|min:1|max:50|unique:App\Models\Room,name,'.$id,
+            'name' => 'required|string|min:1|max:50',
             'price' => 'required|numeric|min:0',
             'count' => 'required|integer|min:1',
             'facilities.*' => 'nullable|distinct',

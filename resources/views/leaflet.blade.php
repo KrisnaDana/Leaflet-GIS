@@ -1480,7 +1480,7 @@
                                                     <div class="invalid-feedback">{{$message}}</div>
                                                     @enderror
                                                 @else
-                                                    <input type="text" class="form-control" name="name" value="{{$hotel->name}}" required/>
+                                                    <input type="text" class="form-control" name="name" value="{{$room->name}}" required/>
                                                 @endif
                                             </div>
                                             <div class="row mb-3">
