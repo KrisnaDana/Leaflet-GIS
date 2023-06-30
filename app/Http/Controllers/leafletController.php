@@ -11,14 +11,24 @@ use Illuminate\Support\Facades\Auth;
 
 class leafletController extends Controller
 {
-    public function index(): View {
+    public function index(Request $request): View {
+        $mode = '';
+        if($request->mode == 'hotel'){
+            $mode == 'hotel';
+        }else if($request->mode == 'routing'){
+            $mode == 'routing';
+        }else{
+            $mode = 'view';
+        }
         $hotels = DB::table('hotel_temp')->get();
         if(Auth::guard('user')->check()){
             $user = Auth::guard('user')->user();
         }else{
             $user = null;
         }
-        return view('leaflet', compact('hotels', 'user'));
+
+        dd($mode);
+        return view('leaflet', compact('hotels', 'user', 'mode'));
     }
 
     public function create(Request $request): RedirectResponse {

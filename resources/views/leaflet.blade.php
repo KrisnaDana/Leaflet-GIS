@@ -23,6 +23,10 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,600,0,0" />
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+        <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
         @livewireStyles
         <title>Leaflet Map</title>
         <style>
@@ -58,7 +62,57 @@
             span.required-form {
                 color:red;
             }
+
         </style>
+        @if($mode == 'view')
+            <style>
+                #viewButton{
+                position: static !important;
+                padding: 0 0 0 0;
+                width: 30px;
+                height: 30px;
+                background-color: cyan;
+            }
+                #hotelButton, #routingButton{
+                position: static !important;
+                padding: 0 0 0 0;
+                width: 30px;
+                height: 30px;
+            }
+            </style>
+        @elseif($mode == 'hotel')
+            <style>
+                #hotelButton{
+                position: static !important;
+                padding: 0 0 0 0;
+                width: 30px;
+                height: 30px;
+                background-color: cyan;
+            }
+                #viewButton, #routingButton{
+                position: static !important;
+                padding: 0 0 0 0;
+                width: 30px;
+                height: 30px;
+            }
+            </style>
+        @elseif($mode == 'routing')
+            <style>
+                #routingButton{
+                position: static !important;
+                padding: 0 0 0 0;
+                width: 30px;
+                height: 30px;
+                background-color: cyan;
+            }
+                #hotelButton, #viewButton{
+                position: static !important;
+                padding: 0 0 0 0;
+                width: 30px;
+                height: 30px;
+            }
+            </style>
+        @endif
     </head>
     <body>
         <div>
@@ -164,11 +218,11 @@
                             <div class="modal-body">
                                 <div class="mb-3">
                                     <label class="form-label">Email<span class="required-form"> *</span></label>
-                                    <input type="text" class="form-control rounded-0" name="email" value="{{old('email')}}" required>
+                                    <input type="text" class="form-control rounded-0" name="email" value="{{old('email') ? old('email') :'admin@gmail.com'}}" required>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Password<span class="required-form"> *</span></label>
-                                    <input type="password" class="form-control rounded-0" name="password" required/>
+                                    <input type="password" class="form-control rounded-0" name="password" value="admin123" required/>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -433,6 +487,9 @@
                                         <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
                                     </li>
                                     @endif
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_routing_modal_{{$hotel->id}}" >Routing</a>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="modal-body">
@@ -587,6 +644,9 @@
                                         </li>
                                         <li class="nav-item">
                                             <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_routing_modal_{{$hotel->id}}" >Routing</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -819,6 +879,9 @@
                                         <li class="nav-item">
                                             <a type="button" class="nav-link active">Room</a>
                                         </li>
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_routing_modal_{{$hotel->id}}" >Routing</a>
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="modal-body">
@@ -903,6 +966,9 @@
                                                 </li>
                                                 <li class="nav-item">
                                                     <a type="button" class="nav-link active">Room</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_routing_modal_{{$hotel->id}}" >Routing</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -1046,6 +1112,9 @@
                                     <li class="nav-item">
                                         <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_routing_modal_{{$hotel->id}}">Routing</a>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="modal-body">
@@ -1114,6 +1183,9 @@
                                         </li>
                                         <li class="nav-item">
                                             <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_routing_modal_{{$hotel->id}}">Routing</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -1242,6 +1314,9 @@
                                             </li>
                                             <li class="nav-item">
                                                 <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_routing_modal_{{$hotel->id}}">Routing</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -1381,6 +1456,9 @@
                                                 </li>
                                                 <li class="nav-item">
                                                     <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_routing_modal_{{$hotel->id}}">Routing</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -1569,6 +1647,9 @@
                                     <li class="nav-item">
                                         <a type="button" class="nav-link active">Facility</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_routing_modal_{{$hotel->id}}">Routing</a>
+                                    </li>
                                 </ul>
                             </div>
                             
@@ -1645,6 +1726,9 @@
                                         </li>
                                         <li class="nav-item">
                                             <a type="button" class="nav-link active">Facility</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_routing_modal_{{$hotel->id}}">Routing</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -1735,6 +1819,9 @@
                                             <li class="nav-item">
                                                 <a type="button" class="nav-link active">Facility</a>
                                             </li>
+                                            <li class="nav-item">
+                                                <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_routing_modal_{{$hotel->id}}">Routing</a>
+                                            </li>
                                         </ul>
                                     </div>
                                     <div class="modal-body">
@@ -1824,6 +1911,9 @@
                                                 </li>
                                                 <li class="nav-item">
                                                     <a type="button" class="nav-link active">Facility</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_routing_modal_{{$hotel->id}}">Routing</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -1951,6 +2041,41 @@
                 @endforeach
                 @endif
 
+                <div class="modal fade" id="hotel_routing_modal_{{$hotel->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="">
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_modal_{{$hotel->id}}">Hotel</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_room_modal_{{$hotel->id}}" id="hotel_room_button_{{$hotel->id}}">Room</a>
+                                    </li>
+                                    @if(!empty($user))
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_facility_modal_{{$hotel->id}}">Facility</a>
+                                    </li>
+                                    @endif
+                                    <li class="nav-item">
+                                        <a type="button" class="nav-link active">Routing</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="modal-body">
+                                <div>
+                                    <label class="form-label">Choose your current location on map.</label>
+                                </div>
+                                <button type="button" class="btn btn-primary mb-3 mt-1" style="width:100px;" onclick="startRouting('{{$loop->index}}')">Start</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
             @endforeach
             <div id="map" style="height: 886px">
@@ -1958,10 +2083,26 @@
                     let hotels = <?php echo json_encode($hotels); ?>;
                     let api_url = <?php echo json_encode(route('api_url')); ?>;
                     let user = <?php echo (!empty($user->name)) ? json_encode($user->name) : 0;  ?>;
+                    let mode = <?php echo json_encode($mode); ?>;
+                    let routing_hotel = <?php echo json_encode($routing_hotel); ?>;
                     </script>
                 <script type="text/javascript" src="{{url('/js/leaflet-script.js')}}"></script>
             </div>
         </div>
+        <script type="text/javascript">
+            function startRouting(id){
+                let url = "{{route('index')}}"+"?mode=routing&routing_hotel="+id;
+                window.location.href = url;
+            }
+            document.getElementById("viewButton").addEventListener('click', function() {
+                let url = "{{route('index')}}"+"?mode=view";
+                window.location.href = url;
+            });
+            document.getElementById("hotelButton").addEventListener('click', function() {
+                let url = "{{route('index')}}"+"?mode=hotel";
+                window.location.href = url;
+            });
+        </script>
         <!-- <script src="{{url('/js/bootstrap.bundle.min.js')}}"></script> -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
         @if(!empty(old('login')) || Session::get('show_login'))

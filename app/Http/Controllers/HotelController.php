@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\File;
 
 class HotelController extends Controller
 {
-    public function index(){
+    public function index(Request $request){
         if(Auth::guard('user')->check()){
             $user = Auth::guard('user')->user();
         }else{
@@ -25,7 +25,20 @@ class HotelController extends Controller
         $rooms = Room::all();
         $room_facilities = RoomFacility::all();
         $images = Image::all();
-        return view('leaflet', compact('user', 'hotels', 'facilities', 'rooms', 'room_facilities', 'images'));
+        $mode = "";
+        if($request->mode == "hotel"){
+            $mode = "hotel";
+        }else if($request->mode == "routing"){
+            $mode = "routing";
+        }else{
+            $mode = "view";
+        }
+        if(isset($request->routing_hotel)){
+            $routing_hotel = $request->routing_hotel;
+        }else{
+            $routing_hotel = null;
+        }
+        return view('leaflet', compact('user', 'hotels', 'facilities', 'rooms', 'room_facilities', 'images', 'mode', 'routing_hotel'));
     }
 
     public function create(Request $request){
