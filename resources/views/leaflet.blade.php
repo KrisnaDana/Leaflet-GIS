@@ -474,7 +474,7 @@
                                 <h1 class="modal-title fs-3" id="exampleModalLabel">{{$hotel->name}}</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <!-- <div class="">
+                            <div class="">
                                 <ul class="nav nav-tabs">
                                     <li class="nav-item">
                                         <a type="button" class="nav-link active">Hotel</a>
@@ -491,9 +491,9 @@
                                         <a type="button" class="nav-link" data-bs-toggle="modal" data-bs-target="#hotel_routing_modal_{{$hotel->id}}" >Routing</a>
                                     </li>
                                 </ul>
-                            </div> -->
+                            </div>
                             <div class="modal-body">
-                                <!-- @if(!empty($user))
+                                @if(!empty($user))
                                     <div class="btn-group mb-4">
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                             Option
@@ -503,7 +503,7 @@
                                             <li><a class="dropdown-item" type="button" data-bs-toggle="modal" data-bs-target="#delete_hotel_modal_{{$hotel->id}}">Delete</a></li>
                                         </ul>
                                     </div>
-                                @endif -->
+                                @endif
                                 <div id="hotel_image_{{$hotel->id}}" class="carousel slide mb-3">
                                     <div class="carousel-inner">
                                         @foreach($images as $image)
